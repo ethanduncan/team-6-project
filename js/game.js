@@ -9,11 +9,12 @@ let gameScene = new Phaser.Scene('Title');
 let config = {
  type: Phaser.AUTO,  //Phaser will decide how to render our game (WebGL or Canvas)
  width: 640, // game width
- height: 360, // game height
+ height: 640, // game height
+ 
  physics: {
     default: 'arcade',
     arcade: {
-        gravity: { y: 300 },
+        //gravity: { y: 300 },
         debug: false
     }
 },
