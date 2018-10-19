@@ -1,0 +1,10 @@
+env:
+  global:
+    #secure variable contains values for AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY
+    - secure: njnZBzE2OOOUVnwz4Vdn0nRMsHoQU4OMLJ1A+HKVBY85Hc6u0r36e8cb2PJWAAexNvIVog2TaHh+7NLNai5U+yz5CRQ2Rh96fJxZqelfcZLQ7D7TXvx3mOPMp1A6MviqFbJmK3FwOw6XitZRjGjCqjHz9hiYyA6/Fdg++hT7YaewdemJ44Rq+2O/QCXDwEnIsenb3ZdGuo11n4/Jyv42oQs0REPFn3q+hPWVbo41cMNb06qMOOGX1sRjBU1IGz36cqpHn6h0Eqxohsmk+Xu5ewSbRqzsjRZKoDNSqJjtNg4YN9jJgU7ffXGMBum1FfUrkV58rlA7u7KRdUC2Vxm0Hg==
+
+build:
+
+  on_success:
+    - aws s3 sync $SHIPPABLE_BUILD_DIR "s3://corcoran-game" --region "eu-west-2"
+
