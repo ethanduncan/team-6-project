@@ -10,7 +10,8 @@ class LevelOneScene extends Phaser.Scene{
      // load images
      this.load.image('background', 'assets/background.png');
      this.load.image('player', 'assets/player.png');
-     this.load.image('platform', 'assets/platform.png');
+     this.load.image('tileset', 'assets/hackTextures.png');
+     this.load.tilemapCSV("tileMap", 'assets/Hackmap.csv');
    };
    
    init () {
@@ -24,26 +25,42 @@ class LevelOneScene extends Phaser.Scene{
       // background
       let bg = this.add.sprite(0, 0, 'background');
       bg.setOrigin(0,0);
-      // player
-     this.player = this.physics.add.sprite(40, this.sys.game.config.height / 2, 'player');
-     
-      // scale down
-     this.player.setScale(0.5);
-     this.player.setBounce(0.2);
-     this.player.setCollideWorldBounds(true);
-   
-     this.platforms = this.physics.add.staticGroup();
-     this.platforms.create(400, 568, 'platform').setScale(2).refreshBody();
-     this.platforms.create(10, 300, 'platform');
-     this.platforms.create(300, 250, 'platform');
-     this.platforms.create(750, 220, 'platform');
-   
+
+      // Load tilemap from tilemap with tile height and width of 32
+      const map = this.make.tilemap({ key: "tileMap", tileWidth: 32, tileHeight: 32 });
+      //create tileset from tileset images loaded
+      const tiles = map.addTilesetImage("tileset");
+      //create a static layer as level does not need modifying by user
+      const layer = map.createStaticLayer(0, tiles, 0, 0);
+
+       // player
+     this.player = this.physics.add.sprite(176, 48, 'player');
+     // scale down
+    this.player.setScale(0.3);
+    this.player.setBounce(0.2);
+
+    //set collisions between layers 1-50 (0 is grass which we want to walk on)
+      layer.setCollisionBetween(1,50);
+      //set up collisions
+      this.physics.add.collider(this.player, layer);
+      //this.player.setCollideWorldBounds(true);
+
+      
+      
      this.cursors = this.input.keyboard.createCursorKeys();
    
-     this.physics.add.collider(this.player, this.platforms);
+     //this.physics.add.collider(this.player, this.platforms);
    }
    
    update () {
+       if (this.player.x > 400)
+       {
+        this.cameras.main.scrollX = this.player.x - 400;
+       }
+       if (this.player.y > 400)
+       {
+        this.cameras.main.scrollY = this.player.y - 400;
+       }
        if (this.cursors.left.isDown)
        {
            this.player.setVelocityX(-160);
@@ -59,9 +76,17 @@ class LevelOneScene extends Phaser.Scene{
            this.player.setVelocityX(0);
        
        }
-       if (this.cursors.up.isDown && this.player.body.touching.down)
+       if (this.cursors.up.isDown)
        {
            this.player.setVelocityY(-250);
+       }
+       else if (this.cursors.down.isDown)
+       {
+            this.player.setVelocityY(250);   
+       }
+       else 
+       {
+            this.player.setVelocityY(0);
        }
    }
 }
