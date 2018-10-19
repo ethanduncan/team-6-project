@@ -4,8 +4,22 @@
     <meta charset="UTF-8" />
     <title>Labyriths of Corcoran</title>
     <script src="//cdn.jsdelivr.net/npm/phaser@3.2.1/dist/phaser.js"></script>
+    <style media='screen' type='text/css'>
+        @font-face {
+            font-family: font1;
+            src: url('assets/font/Minecraft.ttf');
+            font-weight:400;
+            font-weight:normal;
+        }
+        .fontLoader {
+            position: absolute;
+            left: -1000px;
+            visibility: hidden;
+        }
+    </style>
 </head>
 <body>
 <script src="js/game.js"  type="module"></script>
+<div class='fontLoader' style='font-family: font1;'>-</div>
 </body>
 </html>

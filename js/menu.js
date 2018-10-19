@@ -16,7 +16,9 @@ preload () {
 // executed once, after assets were loaded
 create () {
     this.add.image(640, 320, "background");
-    this.add.text(120,100, 'Labyrinths of Corcoran',{ fontSize: '32px', color: 'brown' })
+    this.add.text(120,100, 'Labyrinths of Corcoran',{ fontSize: '32px', color: 'red'}).setFontFamily('font1');
+    // this.text;
+
     var start = this.add.image(320, 200, "start").setScale(0.5);
     start.setInteractive();
     start.on("pointerdown",  () => {
