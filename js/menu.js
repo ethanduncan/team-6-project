@@ -10,16 +10,16 @@ preload () {
   // load images
   this.load.image('background', 'assets/background.png');
   this.load.image('start', 'assets/start.png');
+  this.load.image('logo', 'assets/logo.png');
 };
 
  
 // executed once, after assets were loaded
 create () {
     this.add.image(640, 320, "background");
-    this.add.text(120,100, 'Labyrinths of Corcoran',{ fontSize: '32px', color: 'red'}).setFontFamily('font1');
-    // this.text;
-
-    var start = this.add.image(320, 200, "start").setScale(0.5);
+    // this.add.text(70,100, 'Labyrinths of Corcoran',{ fontSize: '45px', color: 'red'}).setFontFamily('font1');
+    this.add.image(320,220, "logo");
+    var start = this.add.image(320, 400, "start").setScale(0.5);
     start.setInteractive();
     start.on("pointerdown",  () => {
         this.menuNumber = 0;

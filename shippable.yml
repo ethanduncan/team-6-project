@@ -11,4 +11,3 @@ env:
 
 ci:
     - aws s3 sync $SHIPPABLE_BUILD_DIR "s3://corcoran-game" --region "eu-west-2"
-
