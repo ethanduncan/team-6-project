@@ -1,3 +1,9 @@
+language: node_js
+
+branches:
+  only:
+    - master
+
 env:
   global:
     #secure variable contains values for AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY
