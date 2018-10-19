@@ -16,8 +16,8 @@ preload () {
 // executed once, after assets were loaded
 create () {
     this.add.image(640, 320, "background");
-
-    var start = this.add.image(350, 200, "start").setScale(0.5);
+    this.add.text(120,100, 'Labyrinths of Corcoran',{ fontSize: '32px', color: 'brown' })
+    var start = this.add.image(320, 200, "start").setScale(0.5);
     start.setInteractive();
     start.on("pointerdown",  () => {
         this.menuNumber = 0;
