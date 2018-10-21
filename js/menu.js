@@ -9,23 +9,22 @@ preload () {
  
   // load images
   this.load.image('background', 'assets/background.png');
-  this.load.image('start', 'assets/start.png');
+  this.load.image('start', 'assets/play.png');
+  this.load.image('battle', 'assets/Battle.png');  
   this.load.image('logo', 'assets/logo.png');
 };
 
- 
-// executed once, after assets were loaded
 create () {
     this.add.image(640, 320, "background");
     // this.add.text(70,100, 'Labyrinths of Corcoran',{ fontSize: '45px', color: 'red'}).setFontFamily('font1');
-    this.add.image(320,220, "logo");
-    var start = this.add.image(120, 400, "start").setScale(0.5);
+    this.add.image(350,220, "logo").setScale(0.75);
+    var start = this.add.image(120, 500, "start").setScale(0.25);
     start.setInteractive();
     start.on("pointerdown",  () => {
         this.menuNumber = 0;
     });
 
-    var battle = this.add.image(420, 400, "start").setScale(0.5);
+    var battle = this.add.image(520, 500, "battle");
     battle.setInteractive();
     battle.on("pointerdown",  () => {
         this.menuNumber = 1;
@@ -41,10 +40,9 @@ update () {
 };
 
 openWindow() {
-    console.log('opening')
+    //temp until battle code can be properly decoupled.
     var result = window.open('http://turn-based.s3-website.eu-west-2.amazonaws.com/',"_self");
     this.menuNumber = -1;
-    console.log('result', result);
   };
 }
 
