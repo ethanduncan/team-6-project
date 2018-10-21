@@ -10,7 +10,7 @@ preload () {
   // load images
   this.load.image('background', 'assets/background.png');
   this.load.image('start', 'assets/play.png');
-  this.load.image('battle', 'assets/Battle.png');  
+  this.load.image('battle', 'assets/battle2.png');  
   this.load.image('logo', 'assets/logo.png');
 };
 
@@ -24,7 +24,7 @@ create () {
         this.menuNumber = 0;
     });
 
-    var battle = this.add.image(520, 500, "battle");
+    var battle = this.add.image(520, 500, "battle").setScale(0.65);
     battle.setInteractive();
     battle.on("pointerdown",  () => {
         this.menuNumber = 1;
