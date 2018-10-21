@@ -19,17 +19,33 @@ create () {
     this.add.image(640, 320, "background");
     // this.add.text(70,100, 'Labyrinths of Corcoran',{ fontSize: '45px', color: 'red'}).setFontFamily('font1');
     this.add.image(320,220, "logo");
-    var start = this.add.image(320, 400, "start").setScale(0.5);
+    var start = this.add.image(120, 400, "start").setScale(0.5);
     start.setInteractive();
     start.on("pointerdown",  () => {
         this.menuNumber = 0;
     });
-}
+
+    var battle = this.add.image(420, 400, "start").setScale(0.5);
+    battle.setInteractive();
+    battle.on("pointerdown",  () => {
+        this.menuNumber = 1;
+    });
+};
 
 update () {
     if(this.menuNumber===0){
         this.scene.start("LevelOneScene");
+    }else if(this.menuNumber===1){
+        this.openWindow();
     }
+};
+
+openWindow() {
+    console.log('opening')
+    var result = window.open('http://turn-based.s3-website.eu-west-2.amazonaws.com/',"_self");
+    this.menuNumber = -1;
+    console.log('result', result);
+  };
 }
-}
+
 export default MenuScene;
