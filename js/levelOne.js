@@ -1,3 +1,5 @@
+import Player from './Player.js';
+
 class LevelOneScene extends Phaser.Scene{
     constructor() {
         super({key: 'LevelOneScene'})
@@ -34,10 +36,10 @@ class LevelOneScene extends Phaser.Scene{
       const layer = map.createStaticLayer(0, tiles, 0, 0);
 
        // player
-     this.player = this.physics.add.sprite(176, 48, 'player');
+     this.player = new Player(this);
      // scale down
     this.player.setScale(0.3);
-    this.player.setBounce(0.2);
+    this.player.body.setBounce(0.2);
 
     //set collisions between layers 1-50 (0 is grass which we want to walk on)
       layer.setCollisionBetween(1,50);
@@ -45,7 +47,7 @@ class LevelOneScene extends Phaser.Scene{
       this.physics.add.collider(this.player, layer);
       //this.player.setCollideWorldBounds(true);
 
-      
+      this.add.text(0,0,this.player.number); 
       
      this.cursors = this.input.keyboard.createCursorKeys();
    
@@ -63,30 +65,30 @@ class LevelOneScene extends Phaser.Scene{
        }
        if (this.cursors.left.isDown)
        {
-           this.player.setVelocityX(-160);
+           this.player.body.setVelocityX(-160);
        
        }
        else if (this.cursors.right.isDown)
        {
-           this.player.setVelocityX(160);
+           this.player.body.setVelocityX(160);
        
        }
        else
        {
-           this.player.setVelocityX(0);
+           this.player.body.setVelocityX(0);
        
        }
        if (this.cursors.up.isDown)
        {
-           this.player.setVelocityY(-250);
+           this.player.body.setVelocityY(-250);
        }
        else if (this.cursors.down.isDown)
        {
-            this.player.setVelocityY(250);   
+            this.player.body.setVelocityY(250);   
        }
        else 
        {
-            this.player.setVelocityY(0);
+            this.player.body.setVelocityY(0);
        }
    }
 }
