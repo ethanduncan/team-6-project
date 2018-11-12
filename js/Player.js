@@ -7,7 +7,7 @@ export default class Player extends Phaser.GameObjects.Sprite {
 
         this.acceleration = 600;
 
-        this.number = 4;
+        this.leversPulled = 4;
     }
 
     update() {

@@ -12,6 +12,7 @@ class LevelOneScene extends Phaser.Scene{
      // load images
      this.load.image('background', 'assets/background.png');
      this.load.image('player', 'assets/player.png');
+     this.load.image('lever', 'assets/Lever.png');
      this.load.image('tileset', 'assets/hackTextures.png');
      this.load.tilemapCSV("tileMap", 'assets/Hackmap.csv');
    };
@@ -35,11 +36,14 @@ class LevelOneScene extends Phaser.Scene{
       //create a static layer as level does not need modifying by user
       const layer = map.createStaticLayer(0, tiles, 0, 0);
 
+      this.lever = this.add.sprite(400, 300, 'lever').setInteractive();
+      this.lever.setScale(0.1);
+
        // player
      this.player = new Player(this);
      // scale down
-    this.player.setScale(0.3);
-    this.player.body.setBounce(0.2);
+     this.player.setScale(0.3);
+     this.player.body.setBounce(0.2);
 
     //set collisions between layers 1-50 (0 is grass which we want to walk on)
       layer.setCollisionBetween(1,50);
@@ -47,14 +51,37 @@ class LevelOneScene extends Phaser.Scene{
       this.physics.add.collider(this.player, layer);
       //this.player.setCollideWorldBounds(true);
 
-      this.add.text(0,0,this.player.number); 
+      this.add.text(0,0,this.player.leversPulled); 
       
      this.cursors = this.input.keyboard.createCursorKeys();
+
+
+
+
+    //  this.lever.on('keydown_E', function () {
+    //     console.log("asdasd");
+    //         });
    
      //this.physics.add.collider(this.player, this.platforms);
+
+
    }
+
+
+
    
    update () {
+       
+
+    this.button = function(player, lever) {
+        
+            lever.disableBody(true,true);
+            
+    }
+
+    this.physics.add.overlap(this.player, this.lever, console.log("!!!!"), null, this);
+    
+
        if (this.player.x > 400)
        {
         this.cameras.main.scrollX = this.player.x - 400;
@@ -90,7 +117,10 @@ class LevelOneScene extends Phaser.Scene{
        {
             this.player.body.setVelocityY(0);
        }
+
    }
+
+
 }
  export default LevelOneScene;
    
