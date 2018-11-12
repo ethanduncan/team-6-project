@@ -16,8 +16,8 @@ class MenuItem extends Phaser.GameObjects.Text {
 
 class Menu extends Phaser.GameObjects.Container {
 
-    constructor (x, y, scene, heroes) {
-        Phaser.GameObjects.Container.call(this, scene, x, y);
+    constructor (scene, x, y, heroes) {
+        Phaser.GameObjects.Container.call(scene, x, y);
         this.menuItems = [];
         this.menuItemIndex = 0;
         this.heroes = heroes;

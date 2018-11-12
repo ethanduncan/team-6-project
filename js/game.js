@@ -1,28 +1,22 @@
-// create a new scene named "Game"
-import MenuScene from './menu.js';
-import LevelOneScene from './levelOne.js';
-let menuScene = new MenuScene();
-let levelOneScene = new LevelOneScene();
+import BattleScene from './battleScene.js';
+let battleScene = new BattleScene();
 let gameScene = new Phaser.Scene('Title');
 
-// our game's configuration
 let config = {
- type: Phaser.AUTO,  //Phaser will decide how to render our game (WebGL or Canvas)
- width: 640, // game width
- height: 640, // game height
- 
- physics: {
-    default: 'arcade',
-    arcade: {
-        //gravity: { y: 300 },
-        debug: false
-    }
-},
- scene: gameScene // our newly created scene
+    type: Phaser.AUTO,
+    width: 640,
+    height: 640,
+    zoom:2,
+    pixelArt: true,
+    physics: {
+        default: "arcade",
+        arcade: {
+            gravity: { y: 0 }
+        }
+    },
+    scene: gameScene
 };
 
-// create the game, and pass it the configuration
 let game = new Phaser.Game(config);
-game.scene.add('MenuScene',menuScene);
-game.scene.add('LevelOneScene',levelOneScene);
-game.scene.start('MenuScene');
+game.scene.add('BattleScene', battleScene);
+game.scene.start('BattleScene');

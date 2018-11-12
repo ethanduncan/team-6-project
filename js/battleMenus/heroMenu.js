@@ -2,8 +2,8 @@ import Menu from './battleMenu.js'
 
 class HeroesMenu extends Menu {
 
-    HeroesMenu (x, y, scene) {
-        Menu.call(this, x, y, scene);
+    constructor (scene, x, y) {
+        super(scene, x, y);
     }
 }
 

@@ -3,7 +3,7 @@ class Unit extends Phaser.GameObjects.Sprite {
 
 
     Unit (scene, x, y, texture, frame, type, hp, damage, specialDamage) {
-        Phaser.GameObjects.Sprite.call(this, scene, x, y, texture, frame)
+        Phaser.GameObjects.Sprite.call(this, scene, x, y, texture, frame);
         this.type = type;
         this.maxHp = this.hp = hp;
         this.damage = damage; // default damage
