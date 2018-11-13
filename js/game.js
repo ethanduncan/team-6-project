@@ -127,13 +127,10 @@ var WorldScene = new Phaser.Class({
 
         //adding player and lever sprites
         this.player = this.physics.add.sprite(176,48,'player', 6);
-        //this.lever1 = this.physics.add.sprite (176,50, 'lever1', 5);
+        this.lever1 = this.physics.add.sprite (176,50, 'lever', 5).setScale(0.1);
 
+        this.physics.add.overlap(this.player, this.lever1, this.onEvent(this.lever1), null, this);
 
-        this.game.physics.arcade.enable(lever);
-
-
-        
         this.physics.world.bounds.width = map.widthInPixels;
         this.physics.world.bounds.height = map.heightInPixels;
         this.player.setCollideWorldBounds(true);
@@ -155,9 +152,10 @@ var WorldScene = new Phaser.Class({
         //     callbackScope: this
         // });
     },
-    // onEvent: function() {
-    //     console.log("Hello");
-    // },
+    onEvent: function(lever) {
+        console.log("Hello");
+        // lever.disableBody(true,true);
+    },
     update: function (time, delta)
     {
         this.player.body.setVelocity(0);
