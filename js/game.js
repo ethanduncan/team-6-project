@@ -201,15 +201,7 @@ var WorldScene = new Phaser.Class({
         {
             this.player.anims.stop();
         }
-
-       // this.physics.arcade.overlap(player, lever1, leverCollect(lever1), null, this);
-    },
-
-    //leverCollect: function(sprite) {
-    //    this.levers = this.levers + 1;
-    //    sprite.destroy();
-//
-    //}
+    }
     
 });
 
