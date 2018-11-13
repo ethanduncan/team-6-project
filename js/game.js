@@ -154,6 +154,7 @@ var WorldScene = new Phaser.Class({
     },
     onEvent: function(lever) {
         console.log("Hello");
+        // uncomment this to destroy.
         // lever.disableBody(true,true);
     },
     update: function (time, delta)
