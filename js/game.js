@@ -26,6 +26,7 @@ var BootScene = new Phaser.Class({
         this.load.image('battle', 'assets/map/battle2.png');
         this.load.image('logo', 'assets/map/logo.png');
         this.load.image('bolt', 'assets/traps/bolt.png');
+        this.load.image('dead', 'assets/ya_dead.png');
     },
 
     create: function ()
@@ -265,9 +266,32 @@ var WorldScene = new Phaser.Class({
             this.cameras.main.shake(300);
             this.time.addEvent({ delay: 3000, callback: this.battleSceneChange , callbackScope: this });
         }
+
+        if(globalCharHealth <= 0){
+            this.scene.start('DeathScene');
+        }
     }
 
 });
+
+
+var DeathScene = new Phaser.Class({
+    
+        Extends: Phaser.Scene,
+    
+        initialize:
+    
+        function WinScene ()
+        {
+            Phaser.Scene.call(this, {key: "DeathScene"});
+        },
+    
+        create: function ()
+        {
+            this.cameras.main.setBackgroundColor("rgba(0, 0, 0, 0.5)");
+            this.add.image(320, 320, "dead");            
+        }
+    });
 
 
 var LevelUIScene = new Phaser.Class({
@@ -952,7 +976,8 @@ var config = {
         BattleScene,
         UIScene,
         MenuScene,
-        LevelUIScene
+        LevelUIScene,
+        DeathScene
     ]
 };
 var game = new Phaser.Game(config);
