@@ -15,7 +15,7 @@ var BootScene = new Phaser.Class({
         this.load.tilemapCSV('map', 'assets/map/HackMap.csv');
         this.load.spritesheet('player', 'assets/RPG_assets.png', { frameWidth: 16, frameHeight: 16 });
         this.load.image('background', 'assets/map/background.png');
-        this.load.image('lever', 'assets/map/Lever.png');
+        this.load.image('lever', 'assets/map/Lever.PNG');
         this.load.image('tileset', 'assets/map/hackTextures.png');
         this.load.tilemapCSV("tileMap", 'assets/map/Hackmap.csv');
         this.load.image("dragonblue", "assets/dragonblue.png");
@@ -291,6 +291,7 @@ var BattleScene = new Phaser.Class({
         },
         create: function ()
         {
+            
             // change the background to green
             this.cameras.main.setBackgroundColor("rgba(0, 200, 0, 0.5)");
     
@@ -311,7 +312,7 @@ var BattleScene = new Phaser.Class({
     
             // Run UI Scene at the same time
             this.scene.launch("UIScene");
-    
+            this.scene.stop("LevelUIScene");
             this.index = -1;
         },
         nextTurn: function() {
