@@ -11,13 +11,15 @@ var BootScene = new Phaser.Class({
 
     preload: function ()
     {
-        this.load.image('tiles', 'assets/map/spritesheet.png');
-        this.load.tilemapCSV('map', 'assets/map/HackMap.csv');
+        this.load.image('tileset', 'assets/lvl1_tileset.png');
+        //this.load.tilemapCSV('map', 'assets/map/Hackmap.csv');
+        this.load.tilemapCSV('floor', 'assets/map/Level1/lvl1MVP_floor.csv');
+        this.load.tilemapCSV('walls_water', 'assets/map/Level1/lvl1MVP_walls_water.csv');
+        this.load.tilemapCSV('caveins', 'assets/map/Level1/lvl1MVP_caveins.csv');
+        this.load.tilemapCSV('decor', 'assets/map/Level1/lvl1MVP_ground_decor.csv');
         this.load.spritesheet('player', 'assets/RPG_assets.png', { frameWidth: 16, frameHeight: 16 });
         this.load.image('background', 'assets/map/background.png');
         this.load.image('lever', 'assets/map/Lever.PNG');
-        this.load.image('tileset', 'assets/map/hackTextures.png');
-        this.load.tilemapCSV("tileMap", 'assets/map/Hackmap.csv');
         this.load.image("dragonblue", "assets/dragonblue.png");
         this.load.image("dragonorrange", "assets/dragonorrange.png");
         this.load.image('start', 'assets/map/play.png');
@@ -97,9 +99,32 @@ var WorldScene = new Phaser.Class({
         let bg = this.add.sprite(0, 0, 'background');
         bg.setOrigin(0,0);
 
-        const map = this.make.tilemap({ key: "tileMap", tileWidth: 32, tileHeight: 32 });
-        const tiles = map.addTilesetImage("tileset");
-        const layer = map.createStaticLayer(0, tiles, 0, 0);
+        //ground
+        const floor = this.make.tilemap({ key: "floor", tileWidth: 32, tileHeight: 32 });
+        const floorTiles = floor.addTilesetImage("tileset");
+        floor.createStaticLayer(0, floorTiles, 0, 0);
+
+
+
+        // //walls
+        const walls = this.make.tilemap({ key: "walls_water", tileWidth: 32, tileHeight: 32 });
+        const wallsTiles = walls.addTilesetImage("tileset");
+        const wallLayer = walls.createStaticLayer(0, wallsTiles, 0, 0);
+
+        // //caveins
+        const caveins = this.make.tilemap({ key: "caveins", tileWidth: 32, tileHeight: 32 });
+        const CITiles = caveins.addTilesetImage("tileset");
+        const CILayer = caveins.createStaticLayer(0, CITiles, 0, 0);
+
+        // //decor
+        const decor = this.make.tilemap({ key: "decor", tileWidth: 32, tileHeight: 32 });
+        const decorTiles = decor.addTilesetImage("tileset");
+        const decorLayer = decor.createStaticLayer(0, decorTiles, 0, 0);
+
+        //floor.createStaticLayer(1, wallsTiles, 0, 0);
+        //floor.createStaticLayer(CITiles);
+        //floor.createStaticLayer(decorTiles);
+
         this.anims.create({
             key: 'left',
             frames: this.anims.generateFrameNumbers('player', { frames: [1, 7, 1, 13]}),
@@ -127,7 +152,7 @@ var WorldScene = new Phaser.Class({
         });
 
         //adding player and lever sprites
-        this.player = this.physics.add.sprite(176,48,'player', 6);
+        this.player = this.physics.add.sprite(640,480,'player', 6);
         this.lever1 = this.physics.add.sprite (176,150, 'lever', 5).setScale(0.1);
         this.lever2 = this.physics.add.sprite (400,250, 'lever', 5).setScale(0.1);
         
@@ -145,14 +170,18 @@ var WorldScene = new Phaser.Class({
             this.lever2.disableBody(true,true);
         }, null, this);
 
-        this.physics.world.bounds.width = map.widthInPixels;
-        this.physics.world.bounds.height = map.heightInPixels;
+        this.physics.world.bounds.width = floor.widthInPixels;
+        this.physics.world.bounds.height = floor.heightInPixels;
         this.player.setCollideWorldBounds(true);
 
-        layer.setCollisionBetween(1,50);
-        this.physics.add.collider(this.player, layer);
+        wallLayer.setCollisionBetween(0,349);
+        CILayer.setCollisionBetween(0, 349);
+        decorLayer.setCollisionBetween(0, 349);
+        this.physics.add.collider(this.player, wallLayer);
+        this.physics.add.collider(this.player, CILayer);
+        this.physics.add.collider(this.player, decorLayer);
 
-        this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+        this.cameras.main.setBounds(0, 0, floor.widthInPixels, floor.heightInPixels);
         this.cameras.main.startFollow(this.player);
         this.cameras.main.roundPixels = true;
         this.cameras.main.setZoom(1.5);
@@ -328,7 +357,7 @@ var BattleScene = new Phaser.Class({
                         this.events.emit("PlayerSelect", this.index);
                     } else { // else if it's an enemy unit
                         // pick random hero
-                        var r = Math.floor(Math.random() * this.heroes.length);
+                        var r = Math.map(Math.random() * this.heroes.length);
                         // call the enemy"s attack function
                         this.units[this.index].attack(this.heroes[r]);
     
@@ -582,7 +611,7 @@ var HealthBar = new Phaser.Class({
             this.bar.fillStyle(0x00ff00);
         }
 
-        var d = Math.floor(this.p * this.value);
+        var d = Math.map(this.p * this.value);
 
         this.bar.fillRect(this.x + 2, this.y + 2, d, 12);
     }
