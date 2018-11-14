@@ -33,6 +33,8 @@ var BootScene = new Phaser.Class({
         this.load.image('start', 'assets/map/transparent-button-game-1.png');
         this.load.image('battle', 'assets/map/battle2.png');
         this.load.image('logo', 'assets/map/logo.png');
+        this.load.image('bolt', 'assets/traps/bolt.png');
+        this.load.image('dead', 'assets/ya_dead.png');
     },
 
     create: function ()
@@ -40,6 +42,8 @@ var BootScene = new Phaser.Class({
         this.scene.start('MenuScene');
     }
 });
+
+var globalCharHealth = 100;
 
 var MenuScene = new Phaser.Class({
 
@@ -151,6 +155,14 @@ var WorldScene = new Phaser.Class({
         this.player = this.physics.add.sprite(640,480,'player', 6);
         this.lever1 = this.physics.add.sprite (176,150, 'lever', 5).setScale(0.1);
         this.lever2 = this.physics.add.sprite (400,250, 'lever', 5).setScale(0.1);
+
+        this.bolt = this.physics.add.sprite (540,480, 'bolt', 5);
+
+        // this.physics.add.group({
+        //     key: 'bolt',
+        //     repeat: 11,
+        //     setXY: { x: 12, y: 0, stepX: 70 }
+        // });
         
         this.physics.add.overlap(this.player, this.lever1, function() {
             console.log("Hello");
@@ -164,6 +176,13 @@ var WorldScene = new Phaser.Class({
             this.levers = this.levers + 1;
             this.events.emit('addScore');
             this.lever2.disableBody(true,true);
+        }, null, this);
+
+        //add bolt overlap
+        this.physics.add.overlap(this.player, this.bolt, function() {
+            this.bolt.body.enable = false;
+            this.events.emit('removeHealth');
+            this.time.addEvent({ delay: 2000, callback: this.testFunct , callbackScope: this });            
         }, null, this);
 
         this.physics.world.bounds.width = floor.widthInPixels;
@@ -183,16 +202,6 @@ var WorldScene = new Phaser.Class({
         this.cameras.main.setZoom(1.5);
 
         this.cursors = this.input.keyboard.createCursorKeys();
-        
-        // var image = this.add.text(540,380, 'Level One');    
-        // this.tween = this.tweens.add({
-        //     targets: image,
-        //     x: 1000,
-        //     duration: 4000,
-        //     onStart: function () { console.log('onStart'); console.log(arguments); },
-        //     onComplete: function () { image.destroy(); },
-        //     onRepeat: function () { console.log('onRepeat'); console.log(arguments); },
-        // });
 
         var image = this.add.image(600,450, "logo").setScale(0.75);           
         this.tween2 = this.tweens.add({
@@ -206,7 +215,11 @@ var WorldScene = new Phaser.Class({
     },
     testFunct: function() {
         console.log("asd");
-        this.scene.start('BossScene');
+        this.bolt.body.enable = true
+    },
+    battleSceneChange: function() {
+        console.log("asd");
+        this.scene.start("BattleScene");
     },
     update: function (time, delta)
     {
@@ -253,9 +266,13 @@ var WorldScene = new Phaser.Class({
             this.player.anims.stop();
         }
 
-        if(this.levers == 2){
+        if(this.levers == 1){
             this.cameras.main.shake(300);
-            this.time.addEvent({ delay: 3000, callback: this.testFunct , callbackScope: this });
+            this.time.addEvent({ delay: 3000, callback: this.battleSceneChange , callbackScope: this });
+        }
+
+        if(globalCharHealth <= 0){
+            this.scene.start('DeathScene');
         }
     }
 
@@ -405,6 +422,24 @@ var BossScene = new Phaser.Class({
     }
 });
 
+var DeathScene = new Phaser.Class({
+    
+        Extends: Phaser.Scene,
+    
+        initialize:
+    
+        function WinScene ()
+        {
+            Phaser.Scene.call(this, {key: "DeathScene"});
+        },
+    
+        create: function ()
+        {
+            this.cameras.main.setBackgroundColor("rgba(0, 0, 0, 0.5)");
+            this.add.image(320, 320, "dead");            
+        }
+    });
+
 var LevelUIScene = new Phaser.Class({
     
         Extends: Phaser.Scene,
@@ -422,7 +457,7 @@ var LevelUIScene = new Phaser.Class({
         {
             //  Our Text object to display the Score
             var info = this.add.text(420, 600, 'Levers Found: 0', { font: '24px Arial', fill: '#FFFFFF' });
-            var life = this.add.text(50, 600, 'Health: 100%', { font: '24px Arial', fill: '#FFFFFF' });
+            var life = this.add.text(50, 600, 'Health: 100', { font: '24px Arial', fill: '#FFFFFF' });
     
             //  Grab a reference to the Game Scene
             var ourGame = this.scene.get('WorldScene');
@@ -433,6 +468,16 @@ var LevelUIScene = new Phaser.Class({
                 this.score += 1;
     
                 info.setText('Levers Found: ' + this.score);
+    
+            }, this);
+
+            ourGame.events.on('removeHealth', function () {
+                
+                globalCharHealth -= 5;
+
+                console.log(1);
+    
+                life.setText('Health: ' + globalCharHealth);
     
             }, this);
 
@@ -489,7 +534,7 @@ var BattleScene = new Phaser.Class({
     
             // player character - warrior
             //scene, x, y, texture, frame, type, hp, damage, specialDamage, specialCharge
-            var warrior = new PlayerCharacter(this, 50, 150, "player", 1, "Thorvik", 100, 35, 100, 1);
+            var warrior = new PlayerCharacter(this, 50, 150, "player", 1, "Thorvik", globalCharHealth, 35, 100, 1);
             this.add.existing(warrior);
     
             var dragonblue = new Enemy(this, 350, 70, "dragonblue", 2, "Blue Dragon", 180, 13, 10, 4);
@@ -520,7 +565,7 @@ var BattleScene = new Phaser.Class({
                         this.events.emit("PlayerSelect", this.index);
                     } else { // else if it's an enemy unit
                         // pick random hero
-                        var r = Math.map(Math.random() * this.heroes.length);
+                        var r = Math.floor(Math.random() * this.heroes.length);
                         // call the enemy"s attack function
                         this.units[this.index].attack(this.heroes[r]);
     
@@ -774,7 +819,7 @@ var HealthBar = new Phaser.Class({
             this.bar.fillStyle(0x00ff00);
         }
 
-        var d = Math.map(this.p * this.value);
+        var d = Math.floor(this.p * this.value);
 
         this.bar.fillRect(this.x + 2, this.y + 2, d, 12);
     }
@@ -1078,7 +1123,8 @@ var config = {
         BattleScene,
         UIScene,
         MenuScene,
-        LevelUIScene
+        LevelUIScene,
+        DeathScene
     ]
 };
 var game = new Phaser.Game(config);
