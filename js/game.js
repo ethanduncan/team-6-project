@@ -44,7 +44,7 @@ var MenuScene = new Phaser.Class({
     
         preload: function ()
         {
-            
+
         },
     
         create: function ()
@@ -88,6 +88,7 @@ var WorldScene = new Phaser.Class({
 
     preload: function ()
     {
+        this.scene.launch("LevelUIScene");
         
     },
 
@@ -127,17 +128,18 @@ var WorldScene = new Phaser.Class({
 
         //adding player and lever sprites
         this.player = this.physics.add.sprite(176,48,'player', 6);
+        this.lever1 = this.physics.add.sprite (176,150, 'lever', 5).setScale(0.1);
 
+        this.physics.add.overlap(this.player, this.lever1, function() {
+            console.log("Hello");
+            this.levers = this.levers + 1;
+            this.events.emit('addScore');
+            this.lever1.disableBody(true,true);
+        }, null, this);
 
-        //this.game.physics.arcade.enable(lever);
-
-
-        
         this.physics.world.bounds.width = map.widthInPixels;
         this.physics.world.bounds.height = map.heightInPixels;
         this.player.setCollideWorldBounds(true);
-
-        this.add.text(50,50, this.levers);
 
         layer.setCollisionBetween(1,50);
         this.physics.add.collider(this.player, layer);
@@ -145,18 +147,20 @@ var WorldScene = new Phaser.Class({
         this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
         this.cameras.main.startFollow(this.player);
         this.cameras.main.roundPixels = true;
-    
+            this.cameras.main.setZoom(1.5);
+
         this.cursors = this.input.keyboard.createCursorKeys();
         
-        // timedEvent = this.time.addEvent({
-        //     delay: 200000,
-        //     callback: this.scene.start('WorldScene'),
-        //     callbackScope: this
-        // });
+        var image = this.add.text(100,200, 'Level One');    
+        this.tween = this.tweens.add({
+            targets: image,
+            x: 600,
+            duration: 3000,
+            onStart: function () { console.log('onStart'); console.log(arguments); },
+            onComplete: function () { image.destroy(); },
+            onRepeat: function () { console.log('onRepeat'); console.log(arguments); },
+        });
     },
-    // onEvent: function() {
-    //     console.log("Hello");
-    // },
     update: function (time, delta)
     {
         this.player.body.setVelocity(0);
@@ -246,6 +250,8 @@ var WinScene = new Phaser.Class({
             this.enemies = [ dragonblue ];
             this.units = this.heroes.concat(this.enemies);
             this.scene.launch("UIScene");
+
+            // this.cameras.main.setZoom(1.3);   
     
             this.index = -1;
         },
@@ -378,6 +384,7 @@ var WinScene = new Phaser.Class({
             this.heroes = heroes;
             this.x = x;
             this.y = y;
+            // scene.cameras.main.setZoom(2);
         },
         addMenuItem: function(unit) {
             var menuItem = new MenuItem(0, this.menuItems.length * 20, unit, this.scene);
@@ -468,7 +475,72 @@ var WinScene = new Phaser.Class({
             this.scene.events.emit("Enemy", this.menuItemIndex);
         }
     });
+
+    // var LevelUIScene = new Phaser.Class({
+        
+    //         Extends: Phaser.Scene,
+        
+    //         initialize:
+        
+    //         function LevelUIScene ()
+    //         {
+    //             Phaser.Scene.call(this, { key: "LevelUIScene" });
+    //             this.score = 0;
+                
+    //         },
+        
+    //         create: function ()
+    //         {
+    //                     //  Our Text object to display the Score
+    //             let info = this.add.text(10, 10, 'Score: 0', { font: '48px Arial', fill: '#000000' });
+        
+    //             //  Grab a reference to the Game Scene
+    //             let ourGame = this.scene.get('GameScene');
+        
+    //             //  Listen for events from it
+    //             ourGame.events.on('addScore', function () {
+        
+    //                 this.score += 10;
+        
+    //                 info.setText('Score: ' + this.score);
+        
+    //             }, this);
+    //         },
+    //     });
     
+    var LevelUIScene = new Phaser.Class({
+        
+            Extends: Phaser.Scene,
+        
+            initialize:
+        
+            function LevelUIScene ()
+            {
+                Phaser.Scene.call(this, { key: 'LevelUIScene' });
+        
+                this.score = 0;
+            },
+        
+            create: function ()
+            {
+                //  Our Text object to display the Score
+                var info = this.add.text(420, 600, 'Levers Found: 0', { font: '24px Arial', fill: '#000000' });
+        
+                //  Grab a reference to the Game Scene
+                var ourGame = this.scene.get('WorldScene');
+        
+                //  Listen for events from it
+                ourGame.events.on('addScore', function () {
+        
+                    this.score += 1;
+        
+                    info.setText('Levers Found: ' + this.score);
+        
+                }, this);
+            }
+        
+        });
+
     var UIScene = new Phaser.Class({
     
         Extends: Phaser.Scene,
@@ -529,6 +601,8 @@ var WinScene = new Phaser.Class({
     
             this.message = new Message(this, this.battleScene.events);
             this.add.existing(this.message);
+
+            // this.cameras.main.setZoom(1.5);
     
             this.battleScene.nextTurn();
         },
@@ -608,7 +682,7 @@ var config = {
     parent: 'content',
     width: 640,
     height: 640,
-    // zoom: 2,
+    zoom: 2,
     pixelArt: true,
     physics: {
         default: 'arcade',
@@ -622,7 +696,8 @@ var config = {
         WorldScene,
         BattleScene,
         UIScene,
-        MenuScene
+        MenuScene,
+        LevelUIScene
     ]
 };
 var game = new Phaser.Game(config);
