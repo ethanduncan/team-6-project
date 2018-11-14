@@ -22,7 +22,7 @@ var BootScene = new Phaser.Class({
         this.load.image('lever', 'assets/map/Lever.PNG');
         this.load.image("dragonblue", "assets/dragonblue.png");
         this.load.image("dragonorrange", "assets/dragonorrange.png");
-        this.load.image('start', 'assets/map/play.png');
+        this.load.image('start', 'assets/map/transparent-button-game-1.png');
         this.load.image('battle', 'assets/map/battle2.png');
         this.load.image('logo', 'assets/map/logo.png');
     },
@@ -52,26 +52,18 @@ var MenuScene = new Phaser.Class({
         create: function ()
         {
             this.add.image(640, 320, "background");
-            // this.add.text(70,100, 'Labyrinths of Corcoran',{ fontSize: '45px', color: 'red'}).setFontFamily('font1');
             this.add.image(350,220, "logo").setScale(0.75);
-            var start = this.add.image(120, 500, "start").setScale(0.25);
+            var start = this.add.image(320, 500, "start").setScale(0.8);
             start.setInteractive();
             start.on("pointerdown",  () => {
                 this.menuNumber = 0;
             });
 
-            var battle = this.add.image(520, 500, "battle").setScale(0.65);
-            battle.setInteractive();
-            battle.on("pointerdown",  () => {
-                this.menuNumber = 1;
-        });
         },
         update: function (time, delta)
         {
             if(this.menuNumber===0){
                 this.scene.start("WorldScene");
-            }else if(this.menuNumber===1){
-                this.scene.start("BattleScene");
             }
         }
     });
@@ -188,20 +180,29 @@ var WorldScene = new Phaser.Class({
 
         this.cursors = this.input.keyboard.createCursorKeys();
         
-        var image = this.add.text(100,200, 'Level One');    
-        this.tween = this.tweens.add({
+        // var image = this.add.text(540,380, 'Level One');    
+        // this.tween = this.tweens.add({
+        //     targets: image,
+        //     x: 1000,
+        //     duration: 4000,
+        //     onStart: function () { console.log('onStart'); console.log(arguments); },
+        //     onComplete: function () { image.destroy(); },
+        //     onRepeat: function () { console.log('onRepeat'); console.log(arguments); },
+        // });
+
+        var image = this.add.image(600,450, "logo").setScale(0.75);           
+        this.tween2 = this.tweens.add({
             targets: image,
-            x: 600,
-            duration: 3000,
+            x: 1000,
+            duration: 4000,
             onStart: function () { console.log('onStart'); console.log(arguments); },
-            onComplete: function () { image.destroy(); },
+            onComplete: function () { image.setVisible(false); },
             onRepeat: function () { console.log('onRepeat'); console.log(arguments); },
         });
     },
     testFunct: function() {
         console.log("asd");
         this.scene.start('BattleScene');
-        // this.time.addEvent({ delay: 3000, callback: , callbackScope: this });
     },
     update: function (time, delta)
     {
@@ -272,8 +273,8 @@ var LevelUIScene = new Phaser.Class({
         create: function ()
         {
             //  Our Text object to display the Score
-            var info = this.add.text(420, 600, 'Levers Found: 0', { font: '24px Arial', fill: '#000000' });
-            var life = this.add.text(50, 600, 'Health: 100%', { font: '24px Arial', fill: '#000000' });
+            var info = this.add.text(420, 600, 'Levers Found: 0', { font: '24px Arial', fill: '#FFFFFF' });
+            var life = this.add.text(50, 600, 'Health: 100%', { font: '24px Arial', fill: '#FFFFFF' });
     
             //  Grab a reference to the Game Scene
             var ourGame = this.scene.get('WorldScene');
@@ -286,6 +287,20 @@ var LevelUIScene = new Phaser.Class({
                 info.setText('Levers Found: ' + this.score);
     
             }, this);
+
+            this.image = this.add.image(350,220, "logo").setScale(0.75).setVisible(false);            
+
+            this.key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M);
+        },
+        update: function() 
+        {
+            if (this.key.isDown) {
+                if(this.image.visible){
+                    this.image.setVisible(false);
+                }else{
+                    this.image.setVisible(true);                    
+                }            
+              }
         }
     
 });
