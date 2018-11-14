@@ -129,12 +129,20 @@ var WorldScene = new Phaser.Class({
         //adding player and lever sprites
         this.player = this.physics.add.sprite(176,48,'player', 6);
         this.lever1 = this.physics.add.sprite (176,150, 'lever', 5).setScale(0.1);
-
+        this.lever2 = this.physics.add.sprite (400,250, 'lever', 5).setScale(0.1);
+        
         this.physics.add.overlap(this.player, this.lever1, function() {
             console.log("Hello");
             this.levers = this.levers + 1;
             this.events.emit('addScore');
             this.lever1.disableBody(true,true);
+        }, null, this);
+
+        this.physics.add.overlap(this.player, this.lever2, function() {
+            console.log("Hello");
+            this.levers = this.levers + 1;
+            this.events.emit('addScore');
+            this.lever2.disableBody(true,true);
         }, null, this);
 
         this.physics.world.bounds.width = map.widthInPixels;
@@ -147,7 +155,7 @@ var WorldScene = new Phaser.Class({
         this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
         this.cameras.main.startFollow(this.player);
         this.cameras.main.roundPixels = true;
-            this.cameras.main.setZoom(1.5);
+        this.cameras.main.setZoom(1.5);
 
         this.cursors = this.input.keyboard.createCursorKeys();
         
@@ -160,6 +168,11 @@ var WorldScene = new Phaser.Class({
             onComplete: function () { image.destroy(); },
             onRepeat: function () { console.log('onRepeat'); console.log(arguments); },
         });
+    },
+    testFunct: function() {
+        console.log("asd");
+        this.scene.start('BattleScene');
+        // this.time.addEvent({ delay: 3000, callback: , callbackScope: this });
     },
     update: function (time, delta)
     {
@@ -204,6 +217,11 @@ var WorldScene = new Phaser.Class({
         else
         {
             this.player.anims.stop();
+        }
+
+        if(this.levers == 2){
+            this.cameras.main.shake(300);
+            this.time.addEvent({ delay: 3000, callback: this.testFunct , callbackScope: this });
         }
     }
     
