@@ -11,12 +11,20 @@ var BootScene = new Phaser.Class({
 
     preload: function ()
     {
+        //tileset
         this.load.image('tileset', 'assets/lvl1_tileset.png');
-        //this.load.tilemapCSV('map', 'assets/map/Hackmap.csv');
+        //Level 1
         this.load.tilemapCSV('floor', 'assets/map/Level1/lvl1MVP_floor.csv');
         this.load.tilemapCSV('walls_water', 'assets/map/Level1/lvl1MVP_walls_water.csv');
         this.load.tilemapCSV('caveins', 'assets/map/Level1/lvl1MVP_caveins.csv');
         this.load.tilemapCSV('decor', 'assets/map/Level1/lvl1MVP_ground_decor.csv');
+        //Boss Room
+        this.load.tilemapCSV('forge_floor', 'assets/map/Boss/Borrowgeddon_Forge_floors.csv');
+        this.load.tilemapCSV('forge_walls', 'assets/map/Boss/Borrowgeddon_Forge_walls_water.csv');
+        this.load.tilemapCSV('forge_g_decor', 'assets/map/Boss/Borrowgeddon_Forge_ground_decor.csv');
+        this.load.tilemapCSV('forge_f_decor', 'assets/map/Boss/Borrowgeddon_Forge_foreground_decor.csv');
+        this.load.tilemapCSV('forge_blood', 'assets/map/Boss/Borrowgeddon_Forge_blood.csv');
+        //sprites
         this.load.spritesheet('player', 'assets/RPG_assets.png', { frameWidth: 16, frameHeight: 16 });
         this.load.image('background', 'assets/map/background.png');
         this.load.image('lever', 'assets/map/Lever.PNG');
@@ -67,7 +75,9 @@ var MenuScene = new Phaser.Class({
         update: function (time, delta)
         {
             if(this.menuNumber===0){
+                //Revert after testing
                 this.scene.start("WorldScene");
+                //this.scene.start("BossScene");
             }
         }
     });
@@ -100,8 +110,6 @@ var WorldScene = new Phaser.Class({
         const floorTiles = floor.addTilesetImage("tileset");
         floor.createStaticLayer(0, floorTiles, 0, 0);
 
-
-
         // //walls
         const walls = this.make.tilemap({ key: "walls_water", tileWidth: 32, tileHeight: 32 });
         const wallsTiles = walls.addTilesetImage("tileset");
@@ -116,10 +124,6 @@ var WorldScene = new Phaser.Class({
         const decor = this.make.tilemap({ key: "decor", tileWidth: 32, tileHeight: 32 });
         const decorTiles = decor.addTilesetImage("tileset");
         const decorLayer = decor.createStaticLayer(0, decorTiles, 0, 0);
-
-        //floor.createStaticLayer(1, wallsTiles, 0, 0);
-        //floor.createStaticLayer(CITiles);
-        //floor.createStaticLayer(decorTiles);
 
         this.anims.create({
             key: 'left',
@@ -274,6 +278,149 @@ var WorldScene = new Phaser.Class({
 
 });
 
+var BossScene = new Phaser.Class({
+
+    Extends: Phaser.Scene,
+
+    initialize:
+
+    function BossScene ()
+    {
+        Phaser.Scene.call(this, { key: 'BossScene' });
+        this.levers = 0;
+    },
+
+    preload: function ()
+    {
+        this.scene.launch("LevelUIScene");
+        
+    },
+
+    create: function () {
+        //Adding Background
+        let bg = this.add.sprite(0, 0, 'background');
+        bg.setOrigin(0,0);
+
+        //floor layer
+        const Bfloor = this.make.tilemap({ key: "forge_floor", tileWidth: 32, tileHeight: 32 });
+        const BfloorTiles = Bfloor.addTilesetImage("tileset");
+        const BFloorLayer = Bfloor.createStaticLayer(0, BfloorTiles, 0, 0);
+
+        //Walls layer
+        const BWalls = this.make.tilemap({ key: "forge_walls", tileWidth: 32, tileHeight: 32 });
+        const BWallTiles = BWalls.addTilesetImage("tileset");
+        const BWallsLayer = BWalls.createStaticLayer(0, BWallTiles, 0, 0);
+
+        //Ground Decor layer
+        const BGDecor = this.make.tilemap({ key: "forge_g_decor", tileWidth: 32, tileHeight: 32 });
+        const BDecorTiles = BWalls.addTilesetImage("tileset");
+        const BGDecorLayer = BGDecor.createStaticLayer(0, BDecorTiles, 0, 0);
+
+        //Blood layer
+        const B_Blood = this.make.tilemap({ key: "forge_blood", tileWidth: 32, tileHeight: 32 });
+        const B_BloodTiles = B_Blood.addTilesetImage("tileset");
+        const B_BloodyLayer = B_Blood.createStaticLayer(0, B_BloodTiles, 0, 0);
+
+        //Sprite Spawn (done above foreground layer for layering effect)
+        this.anims.create({
+            key: 'left',
+            frames: this.anims.generateFrameNumbers('player', { frames: [1, 7, 1, 13]}),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'right',
+            frames: this.anims.generateFrameNumbers('player', { frames: [1, 7, 1, 13] }),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'up',
+            frames: this.anims.generateFrameNumbers('player', { frames: [2, 8, 2, 14]}),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'down',
+            frames: this.anims.generateFrameNumbers('player', { frames: [ 0, 6, 0, 12 ] }),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.Bplayer = this.physics.add.sprite(640,480,'player', 6);
+
+        //final Layer Spawn
+        const B_F_Decor = this.make.tilemap({ key: "forge_f_decor", tileWidth: 32, tileHeight: 32 });
+        const B_FDecorTiles = B_F_Decor.addTilesetImage("tileset");
+        const B_F_DecorLayer = B_F_Decor.createStaticLayer(0, B_FDecorTiles, 0, 0);
+
+        //World Bounds
+        this.physics.world.bounds.width = Bfloor.widthInPixels;
+        this.physics.world.bounds.height = Bfloor.heightInPixels;
+        
+        //Collisions
+        BWallsLayer.setCollisionBetween(0, 349);
+        BGDecorLayer.setCollisionBetween(0, 349);
+
+        this.physics.add.collider(this.Bplayer, BWallsLayer);
+        this.physics.add.collider(this.Bplayer, BGDecorLayer);
+        this.Bplayer.setCollideWorldBounds(true);
+
+        //Camera Setup
+        this.cameras.main.setBounds(0, 0, Bfloor.widthInPixels, Bfloor.heightInPixels);
+        this.cameras.main.startFollow(this.Bplayer);
+        this.cameras.main.roundPixels = true;
+        this.cameras.main.setZoom(1.5);
+
+        this.cursors = this.input.keyboard.createCursorKeys();
+    },
+
+    update: function (time, delta)
+    {
+        this.Bplayer.body.setVelocity(0);
+
+        if (this.cursors.left.isDown)
+        {
+            this.Bplayer.body.setVelocityX(-80);
+        }
+        else if (this.cursors.right.isDown)
+        {
+            this.Bplayer.body.setVelocityX(80);
+        }
+
+        if (this.cursors.up.isDown)
+        {
+            this.Bplayer.body.setVelocityY(-80);
+        }
+        else if (this.cursors.down.isDown)
+        {
+            this.Bplayer.body.setVelocityY(80);
+        }
+
+        if (this.cursors.left.isDown)
+        {
+            this.Bplayer.anims.play('left', true);
+            this.Bplayer.flipX = true;
+        }
+        else if (this.cursors.right.isDown)
+        {
+            this.Bplayer.anims.play('right', true);
+            this.Bplayer.flipX = false;
+        }
+        else if (this.cursors.up.isDown)
+        {
+            this.Bplayer.anims.play('up', true);
+        }
+        else if (this.cursors.down.isDown)
+        {
+            this.Bplayer.anims.play('down', true);
+        }
+        else
+        {
+            this.Bplayer.anims.stop();
+        }
+    }
+});
 
 var DeathScene = new Phaser.Class({
     
@@ -292,7 +439,6 @@ var DeathScene = new Phaser.Class({
             this.add.image(320, 320, "dead");            
         }
     });
-
 
 var LevelUIScene = new Phaser.Class({
     
@@ -973,6 +1119,7 @@ var config = {
     scene: [
         BootScene,
         WorldScene,
+        BossScene,
         BattleScene,
         UIScene,
         MenuScene,
