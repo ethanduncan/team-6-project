@@ -89,7 +89,7 @@ var WorldScene = new Phaser.Class({
     preload: function ()
     {
         this.scene.launch("LevelUIScene");
-        
+
     },
 
     create: function ()
@@ -130,7 +130,7 @@ var WorldScene = new Phaser.Class({
         this.player = this.physics.add.sprite(176,48,'player', 6);
         this.lever1 = this.physics.add.sprite (176,150, 'lever', 5).setScale(0.1);
         this.lever2 = this.physics.add.sprite (400,250, 'lever', 5).setScale(0.1);
-        
+
         this.physics.add.overlap(this.player, this.lever1, function() {
             console.log("Hello");
             this.levers = this.levers + 1;
@@ -158,8 +158,8 @@ var WorldScene = new Phaser.Class({
         this.cameras.main.setZoom(1.5);
 
         this.cursors = this.input.keyboard.createCursorKeys();
-        
-        var image = this.add.text(100,200, 'Level One');    
+
+        var image = this.add.text(100,200, 'Level One');
         this.tween = this.tweens.add({
             targets: image,
             x: 600,
@@ -228,37 +228,37 @@ var WorldScene = new Phaser.Class({
 });
 
 var LevelUIScene = new Phaser.Class({
-    
+
         Extends: Phaser.Scene,
-    
+
         initialize:
-    
+
         function LevelUIScene ()
         {
             Phaser.Scene.call(this, { key: 'LevelUIScene' });
-    
+
             this.score = 0;
         },
-    
+
         create: function ()
         {
             //  Our Text object to display the Score
             var info = this.add.text(420, 600, 'Levers Found: 0', { font: '24px Arial', fill: '#000000' });
             var life = this.add.text(50, 600, 'Health: 100%', { font: '24px Arial', fill: '#000000' });
-    
+
             //  Grab a reference to the Game Scene
             var ourGame = this.scene.get('WorldScene');
-    
+
             //  Listen for events from it
             ourGame.events.on('addScore', function () {
-    
+
                 this.score += 1;
-    
+
                 info.setText('Levers Found: ' + this.score);
-    
+
             }, this);
         }
-    
+
 });
 
 var WinScene = new Phaser.Class({
@@ -280,36 +280,36 @@ var WinScene = new Phaser.Class({
 });
 
 var BattleScene = new Phaser.Class({
-    
+
         Extends: Phaser.Scene,
-    
+
         initialize:
-    
+
         function BattleScene ()
         {
             Phaser.Scene.call(this, { key: "BattleScene" });
         },
         create: function ()
         {
-            
+
             // change the background to green
             this.cameras.main.setBackgroundColor("rgba(0, 200, 0, 0.5)");
-    
+
             // player character - warrior
             //scene, x, y, texture, frame, type, hp, damage, specialDamage, specialCharge
-            var warrior = new PlayerCharacter(this, 50, 150, "player", 1, "Thorvik", 100, 35, 100, 1);
+            var warrior = new PlayerCharacter(this, 95, 350, "player", 1, "Thorvik", 100, 35, 100, 1, 184, 445);
             this.add.existing(warrior);
-    
-            var dragonblue = new Enemy(this, 350, 70, "dragonblue", 2, "Blue Dragon", 180, 13, 10, 4);
+
+            var dragonblue = new Enemy(this, 460, 120, "dragonblue", 2, "Blue Dragon", 180, 13, 10, 4, 368, 225);
             this.add.existing(dragonblue);
-    
+
             // array with character
             this.heroes = [ warrior ];
             // array with enemies
             this.enemies = [ dragonblue ];
             // array with both parties, who will attack
             this.units = this.heroes.concat(this.enemies);
-    
+
             // Run UI Scene at the same time
             this.scene.launch("UIScene");
             this.scene.stop("LevelUIScene");
@@ -331,7 +331,7 @@ var BattleScene = new Phaser.Class({
                         var r = Math.floor(Math.random() * this.heroes.length);
                         // call the enemy"s attack function
                         this.units[this.index].attack(this.heroes[r]);
-    
+
                         // add timer for the next turn, so will have smooth gameplay
                         this.time.addEvent({ delay: 3000, callback: this.nextTurn, callbackScope: this });
                     }
@@ -356,7 +356,7 @@ var BattleScene = new Phaser.Class({
             // next turn in 3 seconds
             this.time.addEvent({ delay: 3000, callback: this.nextTurn, callbackScope: this });
         }
-    
+
     });
 
 // base class for heroes and enemies
@@ -365,10 +365,10 @@ var Unit = new Phaser.Class({
 
     initialize:
 
-    function Unit(scene, x, y, texture, frame, type, hp, damage, specialDamage, specialCharge) {
+    function Unit(scene, x, y, texture, frame, type, hp, damage, specialDamage, specialCharge, hpx, hpy) {
         Phaser.GameObjects.Sprite.call(this, scene, x, y, texture, frame)
         this.type = type;
-        this.hp = new HealthBar(scene, x - 25, y + 65);
+        this.hp = new HealthBar(scene, hpx, hpy);
         this.damage = damage; // default damage
         this.specialDamage = specialDamage; //special attack damage
         this.alive = true;
@@ -408,12 +408,12 @@ var Unit = new Phaser.Class({
         }
     }
 });
-    
+
     var Menu = new Phaser.Class({
         Extends: Phaser.GameObjects.Container,
-    
+
         initialize:
-    
+
         function Menu(x, y, scene, heroes) {
             Phaser.GameObjects.Container.call(this, scene, x, y);
             this.menuItems = [];
@@ -496,12 +496,12 @@ var Enemy = new Phaser.Class({
     Extends: Unit,
 
     initialize:
-    function Enemy(scene, x, y, texture, frame, type, hp, damage, specialDamage, specialCharge) {
-        Unit.call(this, scene, x, y, texture, frame, type, hp, damage, specialDamage, specialCharge);
+    function Enemy(scene, x, y, texture, frame, type, hp, damage, specialDamage, specialCharge, hpx, hpy) {
+        Unit.call(this, scene, x, y, texture, frame, type, hp, damage, specialDamage, specialCharge, hpx, hpy);
 
         this.flipX = true;
 
-        this.setScale(4);
+        this.setScale(6);
     }
 });
 
@@ -509,11 +509,11 @@ var PlayerCharacter = new Phaser.Class({
     Extends: Unit,
 
     initialize:
-    function PlayerCharacter(scene, x, y, texture, frame, type, hp, damage, specialDamage, specialCharge) {
-        Unit.call(this, scene, x, y, texture, frame, type, hp, damage, specialDamage, specialCharge);
+    function PlayerCharacter(scene, x, y, texture, frame, type, hp, damage, specialDamage, specialCharge, hpx, hpy) {
+        Unit.call(this, scene, x, y, texture, frame, type, hp, damage, specialDamage, specialCharge, hpx, hpy);
         // flip the image so I don"t have to edit it manually
 
-        this.setScale(4);
+        this.setScale(6);
     }
 });
 
@@ -527,7 +527,7 @@ var HealthBar = new Phaser.Class({
         this.x = x;
         this.y = y;
         this.value = 100;
-        this.p = 76 / 100;
+        this.p = 172 / 100;
 
         this.draw();
 
@@ -556,7 +556,7 @@ var HealthBar = new Phaser.Class({
         }
 
         this.draw();
-        
+
         return (this.value === 0);
 
     },
@@ -566,12 +566,12 @@ var HealthBar = new Phaser.Class({
 
         //  BG
         this.bar.fillStyle(0x000000);
-        this.bar.fillRect(this.x, this.y, 80, 16);
+        this.bar.fillRect(this.x, this.y, 178, 20);
 
         //  Health
 
         this.bar.fillStyle(0xffffff);
-        this.bar.fillRect(this.x + 2, this.y + 2, 76, 12);
+        this.bar.fillRect(this.x + 3, this.y + 3, 172, 14);
 
         if (this.value < 30)
         {
@@ -584,7 +584,7 @@ var HealthBar = new Phaser.Class({
 
         var d = Math.floor(this.p * this.value);
 
-        this.bar.fillRect(this.x + 2, this.y + 2, d, 12);
+        this.bar.fillRect(this.x + 3, this.y + 3, d, 14);
     }
 
 });
@@ -595,7 +595,7 @@ var MenuItem = new Phaser.Class({
     initialize:
 
     function MenuItem(x, y, text, scene) {
-        Phaser.GameObjects.Text.call(this, scene, x, y, text, { color: "#ffffff", align: "left", fontSize: 15});
+        Phaser.GameObjects.Text.call(this, scene, x, y, text, { color: "#ffffff", align: "left", fontSize: 20});
     },
 
     select: function() {
@@ -740,24 +740,24 @@ var UIScene = new Phaser.Class({
         this.graphics.fillStyle(0x031f4c, 1);
 
         // background for enemy menu
-        this.graphics.strokeRect(2, 238, 310, 100);
-        this.graphics.fillRect(2, 238, 310, 100);
+        this.graphics.strokeRect(163, 484, 475, 151);
+        this.graphics.fillRect(163, 485, 474, 150);
 
         // background for action menu
-        this.graphics.strokeRect(315, 238, 103, 100);
-        this.graphics.fillRect(315, 238, 103, 100);
+        this.graphics.strokeRect(3, 484, 156, 151);
+        this.graphics.fillRect(3, 485, 155, 150);
 
         // background for hero menu
-        this.graphics.strokeRect(248, 185, 170, 50);
-        this.graphics.fillRect(248, 185, 170, 50);
+        this.graphics.strokeRect(3, 428, 171, 51);
+        this.graphics.fillRect(3, 429, 170, 50);
 
         // basic container to hold all menus
         this.menus = this.add.container();
 
         // offset the actual text menu by 3
-        this.heroesMenu = new HeroesMenu(250, 187, this);
-        this.actionsMenu = new ActionsMenu(318, 241, this);
-        this.enemiesMenu = new EnemiesMenu(5, 241, this);
+        this.heroesMenu = new HeroesMenu(9, 436, this);
+        this.actionsMenu = new ActionsMenu(9, 490, this);
+        this.enemiesMenu = new EnemiesMenu(169, 490, this);
 
         // the currently selected menu
         this.currentMenu = this.actionsMenu;
