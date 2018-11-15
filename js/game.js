@@ -38,10 +38,14 @@ var BootScene = new Phaser.Class({
         this.load.image('infoImage', 'assets/map/Infoscroll.png');
         // this.load.image('dead', 'assets/map/Newgame.png');
 
+        //music
+        this.load.audio('theme', 'assets/music/bensound-epic.mp3');
     },
 
     create: function ()
     {
+        var music = this.sound.add('theme');
+        music.play();
         this.scene.start('MenuScene');
     }
 });
@@ -166,7 +170,7 @@ var WorldScene = new Phaser.Class({
         //     repeat: 11,
         //     setXY: { x: 12, y: 0, stepX: 70 }
         // });
-        
+
         this.physics.add.overlap(this.player, this.lever1, function() {
             console.log("Hello");
             this.levers = this.levers + 1;
@@ -186,7 +190,7 @@ var WorldScene = new Phaser.Class({
             this.bolt.body.enable = false;
             this.events.emit('removeHealth');
             this.cameras.main.shake(150);
-            this.time.addEvent({ delay: 2000, callback: this.testFunct , callbackScope: this });            
+            this.time.addEvent({ delay: 2000, callback: this.testFunct , callbackScope: this });
         }, null, this);
 
         this.physics.world.bounds.width = floor.widthInPixels;
@@ -207,7 +211,7 @@ var WorldScene = new Phaser.Class({
 
         this.cursors = this.input.keyboard.createCursorKeys();
 
-        var image = this.add.image(600,450, "logo").setScale(0.75);           
+        var image = this.add.image(600,450, "logo").setScale(0.75);
         this.tween2 = this.tweens.add({
             targets: image,
             x: 1000,
@@ -303,7 +307,7 @@ var BossScene = new Phaser.Class({
     preload: function ()
     {
         this.scene.launch("LevelUIScene");
-        
+
     },
 
     create: function () {
@@ -369,7 +373,7 @@ var BossScene = new Phaser.Class({
         //World Bounds
         this.physics.world.bounds.width = Bfloor.widthInPixels;
         this.physics.world.bounds.height = Bfloor.heightInPixels;
-        
+
         //Collisions
         BWallsLayer.setCollisionBetween(0, 349);
         BGDecorLayer.setCollisionBetween(0, 349);
@@ -447,26 +451,44 @@ var BossScene = new Phaser.Class({
         if(this.key.isDown){
             this.events.emit('removeInfo');
         }
-    
+
     }
 });
 
 var DeathScene = new Phaser.Class({
-    
+
         Extends: Phaser.Scene,
-    
+
         initialize:
-    
-        function WinScene ()
+
+        function DeathScene ()
         {
             Phaser.Scene.call(this, {key: "DeathScene"});
         },
-    
+
         create: function ()
         {
             this.cameras.main.setBackgroundColor("rgba(0, 0, 0, 0.5)");
-            this.add.image(560, 600, "dead"); 
-            this.add.image(570, 320, "logo").setScale(1);           
+            this.add.image(560, 600, "dead");
+            this.add.image(570, 320, "logo").setScale(1);
+        }
+    });
+
+var WinScene = new Phaser.Class({
+
+        Extends: Phaser.Scene,
+
+        initialize:
+
+        function WinScene ()
+        {
+            Phaser.Scene.call(this, {key: "WinScene"});
+        },
+
+        create: function ()
+        {
+            this.cameras.main.setBackgroundColor("rgba(0, 0, 0, 0.5)");
+            this.add.image(570, 320, "logo").setScale(1);
         }
     });
 
@@ -490,7 +512,7 @@ var LevelUIScene = new Phaser.Class({
             var life = this.add.text(50, 800, 'Health: ' + globalCharHealth , { font: '24px Arial', fill: '#FFFFFF' });
 
             var infoImage = this.add.image(554, 450, "infoImage").setScale(1);
-    
+
             //  Grab a reference to the Game Scene
             var ourGame = this.scene.get('WorldScene');
             var bossGame = this.scene.get('BossScene');
@@ -509,66 +531,48 @@ var LevelUIScene = new Phaser.Class({
             }, this);
 
             ourGame.events.on('removeHealth', function () {
-                
+
                 globalCharHealth -= 5;
 
                 console.log(1);
 
                 ourGame.events.emit("Message", "-5 Health");
-    
+
                 life.setText('Health: ' + globalCharHealth);
-    
+
             }, this);
 
 
             ourGame.events.on('removeInfo', function () {
-    
+
                 infoImage.destroy();
-    
+
             }, this);
 
             bossGame.events.on('removeInfo', function () {
-    
+
                 infoImage.destroy();
-    
+
             }, this);
 
-            this.image = this.add.image(350,220, "logo").setScale(0.75).setVisible(false);            
+            this.image = this.add.image(350,220, "logo").setScale(0.75).setVisible(false);
 
             this.key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M);
-            
-            
+
+
 
         },
-        update: function() 
+        update: function()
         {
             if (this.key.isDown) {
                 if(this.image.visible){
                     this.image.setVisible(false);
                 }else{
-                    this.image.setVisible(true);                    
-                }            
+                    this.image.setVisible(true);
+                }
               }
         }
 
-});
-
-var WinScene = new Phaser.Class({
-
-    Extends: Phaser.Scene,
-
-    initialize:
-
-    function WinScene ()
-    {
-        Phaser.Scene.call(this, {key: "BattleScene"});
-    },
-
-    create: function ()
-    {
-        this.cameras.main.setBackgroundColor("rgba(0, 0, 0, 0.5)");
-        this.events.emit("Message", this.type + "has been defeated!");
-    }
 });
 
 var BattleScene = new Phaser.Class({
@@ -585,15 +589,15 @@ var BattleScene = new Phaser.Class({
         {
 
             // change the background to green
-            this.cameras.main.setBackgroundColor("rgba(0, 200, 0, 0.5)");
+            this.cameras.main.setBackgroundColor("rgba(220, 220, 220, 0.5)");
 
             // player character - warrior
             //scene, x, y, texture, frame, type, hp, damage, specialDamage, specialCharge
             // var warrior = new PlayerCharacter(this, 95, 350, "player", 1, "Thorvik", 100, 35, 100, 1, 184, 445);
-            var warrior = new PlayerCharacter(this, 95, 350, "player", 1, "Thorvik", globalCharHealth, 35, 100, 1, 3, 60);
+            var warrior = new PlayerCharacter(this, 95, 350, "player", 1, "Thorvik", globalCharHealth, 25, 50, 1, 3, 60);
             this.add.existing(warrior);
 
-            var dragonblue = new Enemy(this, 460, 350, "dragonblue", 2, "Blue Dragon", 180, 13, 10, 4, 467, 60);
+            var dragonblue = new Enemy(this, 932, 350, "dragonblue", 2, "Black Dragon", 225, 20, 10, 4, 932, 60);
             this.add.existing(dragonblue);
 
             // array with character
@@ -792,9 +796,7 @@ var Enemy = new Phaser.Class({
     function Enemy(scene, x, y, texture, frame, type, hp, damage, specialDamage, specialCharge, hpx, hpy) {
         Unit.call(this, scene, x, y, texture, frame, type, hp, damage, specialDamage, specialCharge, hpx, hpy);
 
-        this.flipX = true;
-
-        this.setScale(6);
+        this.setScale(8);
     }
 });
 
@@ -1033,8 +1035,8 @@ var UIScene = new Phaser.Class({
         this.graphics.fillStyle(0x031f4c, 1);
 
         // background for enemy menu
-        this.graphics.strokeRect(467, 3, 171, 51);
-        this.graphics.fillRect(467, 4, 170, 50);
+        this.graphics.strokeRect(932, 3, 171, 51);
+        this.graphics.fillRect(932, 4, 170, 50);
 
         // background for message menu
         this.graphics.strokeRect(163, 484, 475, 151);
@@ -1054,7 +1056,7 @@ var UIScene = new Phaser.Class({
         // offset the actual text menu by 3
         this.heroesMenu = new HeroesMenu(9, 11, this);
         this.actionsMenu = new ActionsMenu(9, 490, this);
-        this.enemiesMenu = new EnemiesMenu(473, 11, this);
+        this.enemiesMenu = new EnemiesMenu(938, 11, this);
 
         // the currently selected menu
         this.currentMenu = this.actionsMenu;
@@ -1185,7 +1187,8 @@ var config = {
         UIScene,
         MenuScene,
         LevelUIScene,
-        DeathScene
+        DeathScene,
+        WinScene
     ]
 };
 var game = new Phaser.Game(config);
