@@ -97,7 +97,7 @@ var WorldScene = new Phaser.Class({
     preload: function ()
     {
         this.scene.launch("LevelUIScene");
-        
+
     },
 
     create: function ()
@@ -219,7 +219,7 @@ var WorldScene = new Phaser.Class({
     },
     battleSceneChange: function() {
         console.log("asd");
-        this.scene.start("BattleScene");
+        this.scene.start("BossScene");
     },
     update: function (time, delta)
     {
@@ -441,18 +441,18 @@ var DeathScene = new Phaser.Class({
     });
 
 var LevelUIScene = new Phaser.Class({
-    
+
         Extends: Phaser.Scene,
-    
+
         initialize:
-    
+
         function LevelUIScene ()
         {
             Phaser.Scene.call(this, { key: 'LevelUIScene' });
-    
+
             this.score = 0;
         },
-    
+
         create: function ()
         {
             //  Our Text object to display the Score
@@ -461,14 +461,14 @@ var LevelUIScene = new Phaser.Class({
     
             //  Grab a reference to the Game Scene
             var ourGame = this.scene.get('WorldScene');
-    
+
             //  Listen for events from it
             ourGame.events.on('addScore', function () {
-    
+
                 this.score += 1;
-    
+
                 info.setText('Levers Found: ' + this.score);
-    
+
             }, this);
 
             ourGame.events.on('removeHealth', function () {
@@ -495,7 +495,7 @@ var LevelUIScene = new Phaser.Class({
                 }            
               }
         }
-    
+
 });
 
 var WinScene = new Phaser.Class({
@@ -517,36 +517,37 @@ var WinScene = new Phaser.Class({
 });
 
 var BattleScene = new Phaser.Class({
-    
+
         Extends: Phaser.Scene,
-    
+
         initialize:
-    
+
         function BattleScene ()
         {
             Phaser.Scene.call(this, { key: "BattleScene" });
         },
         create: function ()
         {
-            
+
             // change the background to green
             this.cameras.main.setBackgroundColor("rgba(0, 200, 0, 0.5)");
-    
+
             // player character - warrior
             //scene, x, y, texture, frame, type, hp, damage, specialDamage, specialCharge
-            var warrior = new PlayerCharacter(this, 50, 150, "player", 1, "Thorvik", globalCharHealth, 35, 100, 1);
+            // var warrior = new PlayerCharacter(this, 95, 350, "player", 1, "Thorvik", 100, 35, 100, 1, 184, 445);
+            var warrior = new PlayerCharacter(this, 95, 350, "player", 1, "Thorvik", globalCharHealth, 35, 100, 1, 3, 60);
             this.add.existing(warrior);
-    
-            var dragonblue = new Enemy(this, 350, 70, "dragonblue", 2, "Blue Dragon", 180, 13, 10, 4);
+
+            var dragonblue = new Enemy(this, 460, 350, "dragonblue", 2, "Blue Dragon", 180, 13, 10, 4, 467, 60);
             this.add.existing(dragonblue);
-    
+
             // array with character
             this.heroes = [ warrior ];
             // array with enemies
             this.enemies = [ dragonblue ];
             // array with both parties, who will attack
             this.units = this.heroes.concat(this.enemies);
-    
+
             // Run UI Scene at the same time
             this.scene.launch("UIScene");
             this.scene.stop("LevelUIScene");
@@ -568,7 +569,7 @@ var BattleScene = new Phaser.Class({
                         var r = Math.floor(Math.random() * this.heroes.length);
                         // call the enemy"s attack function
                         this.units[this.index].attack(this.heroes[r]);
-    
+
                         // add timer for the next turn, so will have smooth gameplay
                         this.time.addEvent({ delay: 3000, callback: this.nextTurn, callbackScope: this });
                     }
@@ -593,7 +594,7 @@ var BattleScene = new Phaser.Class({
             // next turn in 3 seconds
             this.time.addEvent({ delay: 3000, callback: this.nextTurn, callbackScope: this });
         }
-    
+
     });
 
 // base class for heroes and enemies
@@ -602,10 +603,10 @@ var Unit = new Phaser.Class({
 
     initialize:
 
-    function Unit(scene, x, y, texture, frame, type, hp, damage, specialDamage, specialCharge) {
+    function Unit(scene, x, y, texture, frame, type, hp, damage, specialDamage, specialCharge, hpx, hpy) {
         Phaser.GameObjects.Sprite.call(this, scene, x, y, texture, frame)
         this.type = type;
-        this.hp = new HealthBar(scene, x - 25, y + 65);
+        this.hp = new HealthBar(scene, hpx, hpy);
         this.damage = damage; // default damage
         this.specialDamage = specialDamage; //special attack damage
         this.alive = true;
@@ -645,12 +646,12 @@ var Unit = new Phaser.Class({
         }
     }
 });
-    
+
     var Menu = new Phaser.Class({
         Extends: Phaser.GameObjects.Container,
-    
+
         initialize:
-    
+
         function Menu(x, y, scene, heroes) {
             Phaser.GameObjects.Container.call(this, scene, x, y);
             this.menuItems = [];
@@ -718,7 +719,7 @@ var Unit = new Phaser.Class({
         }
     },
     heal: function(target) {
-        this.hp.increase(25, this.maxHp);
+        this.hp.increase(25, 100);
         this.scene.events.emit("Message", this.type + " heals 25 hp");
     },
     chargeSpecial: function() {
@@ -733,12 +734,12 @@ var Enemy = new Phaser.Class({
     Extends: Unit,
 
     initialize:
-    function Enemy(scene, x, y, texture, frame, type, hp, damage, specialDamage, specialCharge) {
-        Unit.call(this, scene, x, y, texture, frame, type, hp, damage, specialDamage, specialCharge);
+    function Enemy(scene, x, y, texture, frame, type, hp, damage, specialDamage, specialCharge, hpx, hpy) {
+        Unit.call(this, scene, x, y, texture, frame, type, hp, damage, specialDamage, specialCharge, hpx, hpy);
 
         this.flipX = true;
 
-        this.setScale(4);
+        this.setScale(6);
     }
 });
 
@@ -746,11 +747,11 @@ var PlayerCharacter = new Phaser.Class({
     Extends: Unit,
 
     initialize:
-    function PlayerCharacter(scene, x, y, texture, frame, type, hp, damage, specialDamage, specialCharge) {
-        Unit.call(this, scene, x, y, texture, frame, type, hp, damage, specialDamage, specialCharge);
+    function PlayerCharacter(scene, x, y, texture, frame, type, hp, damage, specialDamage, specialCharge, hpx, hpy) {
+        Unit.call(this, scene, x, y, texture, frame, type, hp, damage, specialDamage, specialCharge, hpx, hpy);
         // flip the image so I don"t have to edit it manually
 
-        this.setScale(4);
+        this.setScale(6);
     }
 });
 
@@ -764,7 +765,7 @@ var HealthBar = new Phaser.Class({
         this.x = x;
         this.y = y;
         this.value = 100;
-        this.p = 76 / 100;
+        this.p = 164 / 100;
 
         this.draw();
 
@@ -787,13 +788,13 @@ var HealthBar = new Phaser.Class({
     increase: function(amount, maxHp) {
         this.value += amount;
 
-        if (this.value < maxHp)
+        if (this.value > 100)
         {
-            this.value = maxHp;
+            this.value = 100;
         }
 
         this.draw();
-        
+
         return (this.value === 0);
 
     },
@@ -803,12 +804,12 @@ var HealthBar = new Phaser.Class({
 
         //  BG
         this.bar.fillStyle(0x000000);
-        this.bar.fillRect(this.x, this.y, 80, 16);
+        this.bar.fillRect(this.x, this.y, 170, 20);
 
         //  Health
 
         this.bar.fillStyle(0xffffff);
-        this.bar.fillRect(this.x + 2, this.y + 2, 76, 12);
+        this.bar.fillRect(this.x + 3, this.y + 3, 164, 14);
 
         if (this.value < 30)
         {
@@ -821,7 +822,7 @@ var HealthBar = new Phaser.Class({
 
         var d = Math.floor(this.p * this.value);
 
-        this.bar.fillRect(this.x + 2, this.y + 2, d, 12);
+        this.bar.fillRect(this.x + 3, this.y + 3, d, 14);
     }
 
 });
@@ -832,7 +833,7 @@ var MenuItem = new Phaser.Class({
     initialize:
 
     function MenuItem(x, y, text, scene) {
-        Phaser.GameObjects.Text.call(this, scene, x, y, text, { color: "#ffffff", align: "left", fontSize: 15});
+        Phaser.GameObjects.Text.call(this, scene, x, y, text, { color: "#ffffff", align: "left", fontSize: 20});
     },
 
     select: function() {
@@ -977,24 +978,28 @@ var UIScene = new Phaser.Class({
         this.graphics.fillStyle(0x031f4c, 1);
 
         // background for enemy menu
-        this.graphics.strokeRect(2, 238, 310, 100);
-        this.graphics.fillRect(2, 238, 310, 100);
+        this.graphics.strokeRect(467, 3, 171, 51);
+        this.graphics.fillRect(467, 4, 170, 50);
+
+        // background for message menu
+        this.graphics.strokeRect(163, 484, 475, 151);
+        this.graphics.fillRect(163, 485, 474, 150);
 
         // background for action menu
-        this.graphics.strokeRect(315, 238, 103, 100);
-        this.graphics.fillRect(315, 238, 103, 100);
+        this.graphics.strokeRect(3, 484, 156, 151);
+        this.graphics.fillRect(3, 485, 155, 150);
 
         // background for hero menu
-        this.graphics.strokeRect(248, 185, 170, 50);
-        this.graphics.fillRect(248, 185, 170, 50);
+        this.graphics.strokeRect(3, 3, 171, 51);
+        this.graphics.fillRect(3, 4, 170, 50);
 
         // basic container to hold all menus
         this.menus = this.add.container();
 
         // offset the actual text menu by 3
-        this.heroesMenu = new HeroesMenu(250, 187, this);
-        this.actionsMenu = new ActionsMenu(318, 241, this);
-        this.enemiesMenu = new EnemiesMenu(5, 241, this);
+        this.heroesMenu = new HeroesMenu(9, 11, this);
+        this.actionsMenu = new ActionsMenu(9, 490, this);
+        this.enemiesMenu = new EnemiesMenu(473, 11, this);
 
         // the currently selected menu
         this.currentMenu = this.actionsMenu;
@@ -1074,14 +1079,14 @@ var Message = new Phaser.Class({
 
     initialize:
     function Message(scene, events) {
-        Phaser.GameObjects.Container.call(this, scene, 160, 30);
+        Phaser.GameObjects.Container.call(this, scene, 400, 499);
         var graphics = this.scene.add.graphics();
         this.add(graphics);
         graphics.lineStyle(1, 0xffffff, 0.8);
         graphics.fillStyle(0x031f4c, 0.3);
-        graphics.strokeRect(-110, -15, 220, 40);
-        graphics.fillRect(-110, -15, 220, 40);
-        this.text = new Phaser.GameObjects.Text(scene, 0, 0, "", { color: "#ffffff", align: "center", fontSize: 13, wordWrap: { width: 220, useAdvancedWrap: true }});
+        graphics.strokeRect(-237, -15, 475, 151);
+        graphics.fillRect(-237, -15, 474, 150);
+        this.text = new Phaser.GameObjects.Text(scene, 0, 50, "", { color: "#ffffff", align: "center", fontSize: 24, wordWrap: { width: 474, useAdvancedWrap: true }});
         this.add(this.text);
         this.text.setOrigin(0.5);
         events.on("Message", this.showMessage, this);
