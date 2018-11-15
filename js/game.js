@@ -30,11 +30,14 @@ var BootScene = new Phaser.Class({
         this.load.image('lever', 'assets/map/Lever.PNG');
         this.load.image("dragonblue", "assets/Monsters/shadow_dragon.png");
         this.load.image("dragonorrange", "assets/dragonorrange.png");
-        this.load.image('start', 'assets/map/transparent-button-game-1.png');
+        this.load.image('start', 'assets/map/Newgame.png');
         this.load.image('battle', 'assets/map/battle2.png');
         this.load.image('logo', 'assets/map/logo.png');
         this.load.image('bolt', 'assets/traps/bolt.png');
         this.load.image('dead', 'assets/ya_dead.png');
+        this.load.image('infoImage', 'assets/map/Infoscroll.png');
+        // this.load.image('dead', 'assets/map/Newgame.png');
+
     },
 
     create: function ()
@@ -213,6 +216,9 @@ var WorldScene = new Phaser.Class({
             onComplete: function () { image.setVisible(false); },
             onRepeat: function () { console.log('onRepeat'); console.log(arguments); },
         });
+
+        this.key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+
     },
     testFunct: function() {
         console.log("asd");
@@ -274,6 +280,10 @@ var WorldScene = new Phaser.Class({
 
         if(globalCharHealth <= 0){
             this.scene.start('DeathScene');
+        }
+
+        if(this.key.isDown){
+            this.events.emit('removeInfo');
         }
     }
 
@@ -447,7 +457,7 @@ var DeathScene = new Phaser.Class({
         create: function ()
         {
             this.cameras.main.setBackgroundColor("rgba(0, 0, 0, 0.5)");
-            this.add.image(320, 320, "dead");            
+            this.add.image(554, 320, "dead");            
         }
     });
 
@@ -469,6 +479,8 @@ var LevelUIScene = new Phaser.Class({
             //  Our Text object to display the Score
             var info = this.add.text(875, 800, 'Levers Found: 0', { font: '24px Arial', fill: '#FFFFFF' });
             var life = this.add.text(50, 800, 'Health: ' + globalCharHealth , { font: '24px Arial', fill: '#FFFFFF' });
+
+            var infoImage = this.add.image(554, 450, "infoImage").setScale(1);
     
             //  Grab a reference to the Game Scene
             var ourGame = this.scene.get('WorldScene');
@@ -495,6 +507,13 @@ var LevelUIScene = new Phaser.Class({
                 ourGame.events.emit("Message", "-5 Health");
     
                 life.setText('Health: ' + globalCharHealth);
+    
+            }, this);
+
+
+            ourGame.events.on('removeInfo', function () {
+    
+                infoImage.destroy();
     
             }, this);
 
