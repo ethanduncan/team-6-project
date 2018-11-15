@@ -28,7 +28,7 @@ var BootScene = new Phaser.Class({
         this.load.spritesheet('player', 'assets/RPG_assets.png', { frameWidth: 16, frameHeight: 16 });
         this.load.image('background', 'assets/map/background.png');
         this.load.image('lever', 'assets/map/Lever.PNG');
-        this.load.image("dragonblue", "assets/dragonblue.png");
+        this.load.image("dragonblue", "assets/Monsters/shadow_dragon.png");
         this.load.image("dragonorrange", "assets/dragonorrange.png");
         this.load.image('start', 'assets/map/transparent-button-game-1.png');
         this.load.image('battle', 'assets/map/battle2.png');
@@ -64,8 +64,8 @@ var MenuScene = new Phaser.Class({
         create: function ()
         {
             this.add.image(640, 320, "background");
-            this.add.image(350,220, "logo").setScale(0.75);
-            var start = this.add.image(320, 500, "start").setScale(0.8);
+            this.add.image(600, 320, "logo").setScale(1.2);
+            var start = this.add.image(554, 700, "start").setScale(0.8);
             start.setInteractive();
             start.on("pointerdown",  () => {
                 this.menuNumber = 0;
@@ -156,7 +156,7 @@ var WorldScene = new Phaser.Class({
         this.lever1 = this.physics.add.sprite (560,784, 'lever', 5).setScale(0.1);
         this.lever2 = this.physics.add.sprite (2128,2448, 'lever', 5).setScale(0.1);
 
-        this.bolt = this.physics.add.sprite (540,480, 'bolt', 5);
+        this.bolt = this.physics.add.sprite(540,480, 'bolt', 5);
 
         // this.physics.add.group({
         //     key: 'bolt',
@@ -182,6 +182,7 @@ var WorldScene = new Phaser.Class({
         this.physics.add.overlap(this.player, this.bolt, function() {
             this.bolt.body.enable = false;
             this.events.emit('removeHealth');
+            this.cameras.main.shake(150);
             this.time.addEvent({ delay: 2000, callback: this.testFunct , callbackScope: this });            
         }, null, this);
 
@@ -227,7 +228,7 @@ var WorldScene = new Phaser.Class({
 
         if (this.cursors.left.isDown)
         {
-            this.player.body.setVelocityX(-120;
+            this.player.body.setVelocityX(-120);
         }
         else if (this.cursors.right.isDown)
         {
@@ -267,7 +268,7 @@ var WorldScene = new Phaser.Class({
         }
 
         if(this.levers == 1){
-            this.cameras.main.shake(300);
+            this.cameras.main.shake(250);
             this.time.addEvent({ delay: 3000, callback: this.battleSceneChange , callbackScope: this });
         }
 
@@ -287,7 +288,6 @@ var BossScene = new Phaser.Class({
     function BossScene ()
     {
         Phaser.Scene.call(this, { key: 'BossScene' });
-        this.levers = 0;
     },
 
     preload: function ()
@@ -320,6 +320,8 @@ var BossScene = new Phaser.Class({
         const B_Blood = this.make.tilemap({ key: "forge_blood", tileWidth: 32, tileHeight: 32 });
         const B_BloodTiles = B_Blood.addTilesetImage("tileset");
         const B_BloodyLayer = B_Blood.createStaticLayer(0, B_BloodTiles, 0, 0);
+
+        this.boss = this.add.sprite(500, 200, 'dragonblue', 5);
 
         //Sprite Spawn (done above foreground layer for layering effect)
         this.anims.create({
@@ -372,9 +374,17 @@ var BossScene = new Phaser.Class({
         this.cameras.main.roundPixels = true;
         this.cameras.main.setZoom(1.5);
 
+        // this.physics.add.overlap(this.bPlayer, this.boss, function() {
+        // }, null, this);
+
+        this.physics.add.overlap(this.Bplayer, this.boss, this.startBattle(), null, this);
+
         this.cursors = this.input.keyboard.createCursorKeys();
     },
-
+    startBattle: function() {
+        console.log("asd");
+        this.scene.start("BattleScene");
+    },
     update: function (time, delta)
     {
         this.Bplayer.body.setVelocity(0);
@@ -419,6 +429,7 @@ var BossScene = new Phaser.Class({
         {
             this.Bplayer.anims.stop();
         }
+    
     }
 });
 
@@ -456,13 +467,13 @@ var LevelUIScene = new Phaser.Class({
         create: function ()
         {
             //  Our Text object to display the Score
-            var info = this.add.text(420, 600, 'Levers Found: 0', { font: '24px Arial', fill: '#FFFFFF' });
-            var life = this.add.text(50, 600, 'Health: 100', { font: '24px Arial', fill: '#FFFFFF' });
+            var info = this.add.text(875, 800, 'Levers Found: 0', { font: '24px Arial', fill: '#FFFFFF' });
+            var life = this.add.text(50, 800, 'Health: ' + globalCharHealth , { font: '24px Arial', fill: '#FFFFFF' });
     
             //  Grab a reference to the Game Scene
             var ourGame = this.scene.get('WorldScene');
 
-            this.message = new Message(this,ourGame.events, 320, 450);
+            this.message = new Message(this,ourGame.events, 552, 600);
             this.add.existing(this.message);
 
 
