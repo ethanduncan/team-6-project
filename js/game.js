@@ -387,7 +387,7 @@ var BossScene = new Phaser.Class({
         // this.physics.add.overlap(this.bPlayer, this.boss, function() {
         // }, null, this);
 
-        this.physics.add.overlap(this.Bplayer, this.boss, this.startBattle(), null, this);
+        this.physics.add.overlap(this.Bplayer, this.boss, this.startBattle, null, this);
 
         this.cursors = this.input.keyboard.createCursorKeys();
     },
@@ -438,6 +438,9 @@ var BossScene = new Phaser.Class({
         else
         {
             this.Bplayer.anims.stop();
+        }
+        if(this.key.isDown){
+            this.events.emit('removeInfo');
         }
     
     }
