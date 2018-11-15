@@ -152,9 +152,9 @@ var WorldScene = new Phaser.Class({
         });
 
         //adding player and lever sprites
-        this.player = this.physics.add.sprite(640,480,'player', 6);
-        this.lever1 = this.physics.add.sprite (176,150, 'lever', 5).setScale(0.1);
-        this.lever2 = this.physics.add.sprite (400,250, 'lever', 5).setScale(0.1);
+        this.player = this.physics.add.sprite(2224,48,'player', 6);
+        this.lever1 = this.physics.add.sprite (560,784, 'lever', 5).setScale(0.1);
+        this.lever2 = this.physics.add.sprite (2128,2448, 'lever', 5).setScale(0.1);
 
         this.bolt = this.physics.add.sprite (540,480, 'bolt', 5);
 
@@ -192,9 +192,9 @@ var WorldScene = new Phaser.Class({
         wallLayer.setCollisionBetween(0,349);
         CILayer.setCollisionBetween(0, 349);
         decorLayer.setCollisionBetween(0, 349);
-        this.physics.add.collider(this.player, wallLayer);
-        this.physics.add.collider(this.player, CILayer);
-        this.physics.add.collider(this.player, decorLayer);
+        //this.physics.add.collider(this.player, wallLayer);
+        //this.physics.add.collider(this.player, CILayer);
+        //this.physics.add.collider(this.player, decorLayer);
 
         this.cameras.main.setBounds(0, 0, floor.widthInPixels, floor.heightInPixels);
         this.cameras.main.startFollow(this.player);
@@ -227,20 +227,20 @@ var WorldScene = new Phaser.Class({
 
         if (this.cursors.left.isDown)
         {
-            this.player.body.setVelocityX(-80);
+            this.player.body.setVelocityX(-1000);
         }
         else if (this.cursors.right.isDown)
         {
-            this.player.body.setVelocityX(80);
+            this.player.body.setVelocityX(1000);
         }
 
         if (this.cursors.up.isDown)
         {
-            this.player.body.setVelocityY(-80);
+            this.player.body.setVelocityY(-1000);
         }
         else if (this.cursors.down.isDown)
         {
-            this.player.body.setVelocityY(80);
+            this.player.body.setVelocityY(1000);
         }
 
         if (this.cursors.left.isDown)
@@ -1110,8 +1110,8 @@ var Message = new Phaser.Class({
 var config = {
     type: Phaser.AUTO,
     parent: 'content',
-    width: 640,
-    height: 640,
+    width: 1104,
+    height: 844,
     zoom: 2,
     pixelArt: true,
     physics: {
