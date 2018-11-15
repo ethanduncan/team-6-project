@@ -182,6 +182,7 @@ var WorldScene = new Phaser.Class({
         this.physics.add.overlap(this.player, this.bolt, function() {
             this.bolt.body.enable = false;
             this.events.emit('removeHealth');
+            this.cameras.main.shake(150);
             this.time.addEvent({ delay: 2000, callback: this.testFunct , callbackScope: this });            
         }, null, this);
 
@@ -267,7 +268,7 @@ var WorldScene = new Phaser.Class({
         }
 
         if(this.levers == 1){
-            this.cameras.main.shake(300);
+            this.cameras.main.shake(250);
             this.time.addEvent({ delay: 3000, callback: this.battleSceneChange , callbackScope: this });
         }
 
@@ -457,7 +458,7 @@ var LevelUIScene = new Phaser.Class({
         {
             //  Our Text object to display the Score
             var info = this.add.text(420, 600, 'Levers Found: 0', { font: '24px Arial', fill: '#FFFFFF' });
-            var life = this.add.text(50, 600, 'Health: 100', { font: '24px Arial', fill: '#FFFFFF' });
+            var life = this.add.text(50, 600, 'Health: ' + globalCharHealth , { font: '24px Arial', fill: '#FFFFFF' });
     
             //  Grab a reference to the Game Scene
             var ourGame = this.scene.get('WorldScene');
