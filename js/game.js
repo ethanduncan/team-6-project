@@ -28,13 +28,16 @@ var BootScene = new Phaser.Class({
         this.load.spritesheet('player', 'assets/RPG_assets.png', { frameWidth: 16, frameHeight: 16 });
         this.load.image('background', 'assets/map/background.png');
         this.load.image('lever', 'assets/map/Lever.PNG');
-        this.load.image("dragonblue", "assets/dragonblue.png");
+        this.load.image("dragonblue", "assets/Monsters/shadow_dragon.png");
         this.load.image("dragonorrange", "assets/dragonorrange.png");
-        this.load.image('start', 'assets/map/transparent-button-game-1.png');
+        this.load.image('start', 'assets/map/Newgame.png');
         this.load.image('battle', 'assets/map/battle2.png');
         this.load.image('logo', 'assets/map/logo.png');
         this.load.image('bolt', 'assets/traps/bolt.png');
         this.load.image('dead', 'assets/ya_dead.png');
+        this.load.image('infoImage', 'assets/map/Infoscroll.png');
+        // this.load.image('dead', 'assets/map/Newgame.png');
+
     },
 
     create: function ()
@@ -64,8 +67,8 @@ var MenuScene = new Phaser.Class({
         create: function ()
         {
             this.add.image(640, 320, "background");
-            this.add.image(350,220, "logo").setScale(0.75);
-            var start = this.add.image(320, 500, "start").setScale(0.8);
+            this.add.image(600, 320, "logo").setScale(1.2);
+            var start = this.add.image(554, 700, "start").setScale(0.8);
             start.setInteractive();
             start.on("pointerdown",  () => {
                 this.menuNumber = 0;
@@ -167,7 +170,6 @@ var WorldScene = new Phaser.Class({
         this.bolt7 = this.physics.add.sprite (816,1264, 'bolt', 5);
         this.bolt8 = this.physics.add.sprite (1104,1488, 'bolt', 5);
 
-
         // this.physics.add.group({
         //     key: 'bolt',
         //     repeat: 11,
@@ -199,49 +201,57 @@ var WorldScene = new Phaser.Class({
         this.physics.add.overlap(this.player, this.bolt1, function() {
             this.bolt1.body.enable = false;
             this.events.emit('removeHealth');
-            this.time.addEvent({ delay: 2000, callback: this.testFunct1 , callbackScope: this });            
+            this.time.addEvent({ delay: 2000, callback: this.testFunct1 , callbackScope: this });
+            this.cameras.main.shake(150);             
         }, null, this);
 
         this.physics.add.overlap(this.player, this.bolt2, function() {
             this.bolt2.body.enable = false;
             this.events.emit('removeHealth');
-            this.time.addEvent({ delay: 2000, callback: this.testFunct2 , callbackScope: this });            
+            this.time.addEvent({ delay: 2000, callback: this.testFunct2 , callbackScope: this });
+            this.cameras.main.shake(150);             
         }, null, this);
 
         this.physics.add.overlap(this.player, this.bolt3, function() {
             this.bolt3.body.enable = false;
             this.events.emit('removeHealth');
-            this.time.addEvent({ delay: 2000, callback: this.testFunct3 , callbackScope: this });            
+            this.time.addEvent({ delay: 2000, callback: this.testFunct3 , callbackScope: this });
+            this.cameras.main.shake(150);             
         }, null, this);
 
         this.physics.add.overlap(this.player, this.bolt4, function() {
             this.bolt4.body.enable = false;
             this.events.emit('removeHealth');
-            this.time.addEvent({ delay: 2000, callback: this.testFunct4 , callbackScope: this });            
+            this.time.addEvent({ delay: 2000, callback: this.testFunct4 , callbackScope: this });
+            this.cameras.main.shake(150);             
         }, null, this);
 
         this.physics.add.overlap(this.player, this.bolt5, function() {
             this.bolt5.body.enable = false;
             this.events.emit('removeHealth');
-            this.time.addEvent({ delay: 2000, callback: this.testFunct5 , callbackScope: this });            
+            this.time.addEvent({ delay: 2000, callback: this.testFunct5 , callbackScope: this });
+            this.cameras.main.shake(150);            
         }, null, this);
 
         this.physics.add.overlap(this.player, this.bolt6, function() {
             this.bolt6.body.enable = false;
             this.events.emit('removeHealth');
-            this.time.addEvent({ delay: 2000, callback: this.testFunct6 , callbackScope: this });            
+            this.time.addEvent({ delay: 2000, callback: this.testFunct6 , callbackScope: this });
+            this.cameras.main.shake(150);             
         }, null, this);
 
         this.physics.add.overlap(this.player, this.bolt7, function() {
             this.bolt7.body.enable = false;
             this.events.emit('removeHealth');
-            this.time.addEvent({ delay: 2000, callback: this.testFunct7 , callbackScope: this });            
+            this.time.addEvent({ delay: 2000, callback: this.testFunct7 , callbackScope: this });
+            this.cameras.main.shake(150);             
         }, null, this);
 
         this.physics.add.overlap(this.player, this.bolt8, function() {
             this.bolt8.body.enable = false;
             this.events.emit('removeHealth');
             this.time.addEvent({ delay: 2000, callback: this.testFunct8 , callbackScope: this });            
+            this.cameras.main.shake(150);           
         }, null, this);
 
         this.physics.world.bounds.width = floor.widthInPixels;
@@ -271,6 +281,9 @@ var WorldScene = new Phaser.Class({
             onComplete: function () { image.setVisible(false); },
             onRepeat: function () { console.log('onRepeat'); console.log(arguments); },
         });
+
+        this.key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+
     },
     testFunct1: function () {
         console.log("asd");
@@ -375,6 +388,10 @@ var WorldScene = new Phaser.Class({
         if(globalCharHealth <= 0){
             this.scene.start('DeathScene');
         }
+
+        if(this.key.isDown){
+            this.events.emit('removeInfo');
+        }
     }
 
 });
@@ -388,7 +405,6 @@ var BossScene = new Phaser.Class({
     function BossScene ()
     {
         Phaser.Scene.call(this, { key: 'BossScene' });
-        this.levers = 0;
     },
 
     preload: function ()
@@ -422,6 +438,8 @@ var BossScene = new Phaser.Class({
         const B_BloodTiles = B_Blood.addTilesetImage("tileset");
         const B_BloodyLayer = B_Blood.createStaticLayer(0, B_BloodTiles, 0, 0);
 
+        this.boss = this.add.sprite(500, 200, 'dragonblue', 5);
+
         //Sprite Spawn (done above foreground layer for layering effect)
         this.anims.create({
             key: 'left',
@@ -448,7 +466,7 @@ var BossScene = new Phaser.Class({
             frameRate: 10,
             repeat: -1
         });
-        this.Bplayer = this.physics.add.sprite(640,480,'player', 6);
+        this.Bplayer = this.physics.add.sprite(368,944,'player', 6);
 
         //final Layer Spawn
         const B_F_Decor = this.make.tilemap({ key: "forge_f_decor", tileWidth: 32, tileHeight: 32 });
@@ -473,9 +491,17 @@ var BossScene = new Phaser.Class({
         this.cameras.main.roundPixels = true;
         this.cameras.main.setZoom(1.5);
 
+        // this.physics.add.overlap(this.bPlayer, this.boss, function() {
+        // }, null, this);
+
+        this.physics.add.overlap(this.Bplayer, this.boss, this.startBattle(), null, this);
+
         this.cursors = this.input.keyboard.createCursorKeys();
     },
-
+    startBattle: function() {
+        console.log("asd");
+        this.scene.start("BattleScene");
+    },
     update: function (time, delta)
     {
         this.Bplayer.body.setVelocity(0);
@@ -520,6 +546,7 @@ var BossScene = new Phaser.Class({
         {
             this.Bplayer.anims.stop();
         }
+    
     }
 });
 
@@ -537,7 +564,8 @@ var DeathScene = new Phaser.Class({
         create: function ()
         {
             this.cameras.main.setBackgroundColor("rgba(0, 0, 0, 0.5)");
-            this.add.image(320, 320, "dead");            
+            this.add.image(560, 600, "dead"); 
+            this.add.image(570, 320, "logo").setScale(1);           
         }
     });
 
@@ -557,13 +585,16 @@ var LevelUIScene = new Phaser.Class({
         create: function ()
         {
             //  Our Text object to display the Score
-            var info = this.add.text(420, 800, 'Levers Found: 0', { font: '24px Arial', fill: '#FFFFFF' });
-            var life = this.add.text(50, 800, 'Health: 100', { font: '24px Arial', fill: '#FFFFFF' });
+
+            var info = this.add.text(875, 800, 'Levers Found: 0', { font: '24px Arial', fill: '#FFFFFF' });
+            var life = this.add.text(50, 800, 'Health: ' + globalCharHealth , { font: '24px Arial', fill: '#FFFFFF' });
+
+            var infoImage = this.add.image(554, 450, "infoImage").setScale(1);
     
             //  Grab a reference to the Game Scene
             var ourGame = this.scene.get('WorldScene');
 
-            this.message = new Message(this,ourGame.events, 320, 450);
+            this.message = new Message(this,ourGame.events, 552, 600);
             this.add.existing(this.message);
 
 
@@ -585,6 +616,13 @@ var LevelUIScene = new Phaser.Class({
                 ourGame.events.emit("Message", "-5 Health");
     
                 life.setText('Health: ' + globalCharHealth);
+    
+            }, this);
+
+
+            ourGame.events.on('removeInfo', function () {
+    
+                infoImage.destroy();
     
             }, this);
 
