@@ -193,12 +193,12 @@ var WorldScene = new Phaser.Class({
         this.physics.world.bounds.height = floor.heightInPixels;
         this.player.setCollideWorldBounds(true);
 
-        wallLayer.setCollisionBetween(0,349);
-        CILayer.setCollisionBetween(0, 349);
-        decorLayer.setCollisionBetween(0, 349);
-        this.physics.add.collider(this.player, wallLayer);
-        this.physics.add.collider(this.player, CILayer);
-        this.physics.add.collider(this.player, decorLayer);
+        // wallLayer.setCollisionBetween(0,349);
+        // CILayer.setCollisionBetween(0, 349);
+        // decorLayer.setCollisionBetween(0, 349);
+        // this.physics.add.collider(this.player, wallLayer);
+        // this.physics.add.collider(this.player, CILayer);
+        // this.physics.add.collider(this.player, decorLayer);
 
         this.cameras.main.setBounds(0, 0, floor.widthInPixels, floor.heightInPixels);
         this.cameras.main.startFollow(this.player);
@@ -388,11 +388,16 @@ var BossScene = new Phaser.Class({
         // }, null, this);
 
         this.physics.add.overlap(this.Bplayer, this.boss, this.startBattle, null, this);
+        this.time.addEvent({ delay: 10000, callback: this.startBattle, callbackScope: this });
+
 
         this.cursors = this.input.keyboard.createCursorKeys();
+
+        this.key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+
     },
     startBattle: function() {
-        console.log("asd");
+        console.log("starting scene");
         this.scene.start("BattleScene");
     },
     update: function (time, delta)
@@ -488,6 +493,7 @@ var LevelUIScene = new Phaser.Class({
     
             //  Grab a reference to the Game Scene
             var ourGame = this.scene.get('WorldScene');
+            var bossGame = this.scene.get('BossScene');
 
             this.message = new Message(this,ourGame.events, 552, 600);
             this.add.existing(this.message);
@@ -516,6 +522,12 @@ var LevelUIScene = new Phaser.Class({
 
 
             ourGame.events.on('removeInfo', function () {
+    
+                infoImage.destroy();
+    
+            }, this);
+
+            bossGame.events.on('removeInfo', function () {
     
                 infoImage.destroy();
     
