@@ -46,7 +46,7 @@ var BootScene = new Phaser.Class({
     }
 });
 
-var globalCharHealth = 0;
+var globalCharHealth = 100;
 
 var MenuScene = new Phaser.Class({
 
