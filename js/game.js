@@ -192,9 +192,9 @@ var WorldScene = new Phaser.Class({
         wallLayer.setCollisionBetween(0,349);
         CILayer.setCollisionBetween(0, 349);
         decorLayer.setCollisionBetween(0, 349);
-        //this.physics.add.collider(this.player, wallLayer);
-        //this.physics.add.collider(this.player, CILayer);
-        //this.physics.add.collider(this.player, decorLayer);
+        this.physics.add.collider(this.player, wallLayer);
+        this.physics.add.collider(this.player, CILayer);
+        this.physics.add.collider(this.player, decorLayer);
 
         this.cameras.main.setBounds(0, 0, floor.widthInPixels, floor.heightInPixels);
         this.cameras.main.startFollow(this.player);
@@ -227,20 +227,20 @@ var WorldScene = new Phaser.Class({
 
         if (this.cursors.left.isDown)
         {
-            this.player.body.setVelocityX(-1000);
+            this.player.body.setVelocityX(-120;
         }
         else if (this.cursors.right.isDown)
         {
-            this.player.body.setVelocityX(1000);
+            this.player.body.setVelocityX(120);
         }
 
         if (this.cursors.up.isDown)
         {
-            this.player.body.setVelocityY(-1000);
+            this.player.body.setVelocityY(-120);
         }
         else if (this.cursors.down.isDown)
         {
-            this.player.body.setVelocityY(1000);
+            this.player.body.setVelocityY(120);
         }
 
         if (this.cursors.left.isDown)
@@ -381,20 +381,20 @@ var BossScene = new Phaser.Class({
 
         if (this.cursors.left.isDown)
         {
-            this.Bplayer.body.setVelocityX(-80);
+            this.Bplayer.body.setVelocityX(-120);
         }
         else if (this.cursors.right.isDown)
         {
-            this.Bplayer.body.setVelocityX(80);
+            this.Bplayer.body.setVelocityX(120);
         }
 
         if (this.cursors.up.isDown)
         {
-            this.Bplayer.body.setVelocityY(-80);
+            this.Bplayer.body.setVelocityY(-120);
         }
         else if (this.cursors.down.isDown)
         {
-            this.Bplayer.body.setVelocityY(80);
+            this.Bplayer.body.setVelocityY(120);
         }
 
         if (this.cursors.left.isDown)
