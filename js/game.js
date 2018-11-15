@@ -462,6 +462,10 @@ var LevelUIScene = new Phaser.Class({
             //  Grab a reference to the Game Scene
             var ourGame = this.scene.get('WorldScene');
 
+            this.message = new Message(this,ourGame.events, 320, 450);
+            this.add.existing(this.message);
+
+
             //  Listen for events from it
             ourGame.events.on('addScore', function () {
 
@@ -476,6 +480,8 @@ var LevelUIScene = new Phaser.Class({
                 globalCharHealth -= 5;
 
                 console.log(1);
+
+                ourGame.events.emit("Message", "-5 Health");
     
                 life.setText('Health: ' + globalCharHealth);
     
@@ -484,6 +490,9 @@ var LevelUIScene = new Phaser.Class({
             this.image = this.add.image(350,220, "logo").setScale(0.75).setVisible(false);            
 
             this.key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M);
+            
+            
+
         },
         update: function() 
         {
@@ -1023,7 +1032,7 @@ var UIScene = new Phaser.Class({
         this.events.on("Enemy", this.onEnemy, this);
         this.events.on("Heal", this.onHeal, this);
 
-        this.message = new Message(this, this.battleScene.events);
+        this.message = new Message(this, this.battleScene.events, 400, 499);
         this.add.existing(this.message);
 
         this.battleScene.nextTurn();
@@ -1078,8 +1087,9 @@ var Message = new Phaser.Class({
     Extends: Phaser.GameObjects.Container,
 
     initialize:
-    function Message(scene, events) {
-        Phaser.GameObjects.Container.call(this, scene, 400, 499);
+    function Message(scene, events, x, y) {
+
+        Phaser.GameObjects.Container.call(this, scene, x, y);
         var graphics = this.scene.add.graphics();
         this.add(graphics);
         graphics.lineStyle(1, 0xffffff, 0.8);
