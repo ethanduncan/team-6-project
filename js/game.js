@@ -46,7 +46,7 @@ var BootScene = new Phaser.Class({
     }
 });
 
-var globalCharHealth = 100;
+var globalCharHealth = 0;
 
 var MenuScene = new Phaser.Class({
 
@@ -457,7 +457,8 @@ var DeathScene = new Phaser.Class({
         create: function ()
         {
             this.cameras.main.setBackgroundColor("rgba(0, 0, 0, 0.5)");
-            this.add.image(554, 320, "dead");            
+            this.add.image(560, 600, "dead"); 
+            this.add.image(570, 320, "logo").setScale(1);           
         }
     });
 
