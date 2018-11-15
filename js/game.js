@@ -64,8 +64,8 @@ var MenuScene = new Phaser.Class({
         create: function ()
         {
             this.add.image(640, 320, "background");
-            this.add.image(350,220, "logo").setScale(0.75);
-            var start = this.add.image(320, 500, "start").setScale(0.8);
+            this.add.image(600, 320, "logo").setScale(1.2);
+            var start = this.add.image(554, 700, "start").setScale(0.8);
             start.setInteractive();
             start.on("pointerdown",  () => {
                 this.menuNumber = 0;
@@ -228,7 +228,7 @@ var WorldScene = new Phaser.Class({
 
         if (this.cursors.left.isDown)
         {
-            this.player.body.setVelocityX(-120;
+            this.player.body.setVelocityX(-120);
         }
         else if (this.cursors.right.isDown)
         {
@@ -457,13 +457,13 @@ var LevelUIScene = new Phaser.Class({
         create: function ()
         {
             //  Our Text object to display the Score
-            var info = this.add.text(420, 600, 'Levers Found: 0', { font: '24px Arial', fill: '#FFFFFF' });
-            var life = this.add.text(50, 600, 'Health: ' + globalCharHealth , { font: '24px Arial', fill: '#FFFFFF' });
+            var info = this.add.text(900, 800, 'Levers Found: 0', { font: '24px Arial', fill: '#FFFFFF' });
+            var life = this.add.text(50, 800, 'Health: ' + globalCharHealth , { font: '24px Arial', fill: '#FFFFFF' });
     
             //  Grab a reference to the Game Scene
             var ourGame = this.scene.get('WorldScene');
 
-            this.message = new Message(this,ourGame.events, 320, 450);
+            this.message = new Message(this,ourGame.events, 552, 600);
             this.add.existing(this.message);
 
 
