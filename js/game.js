@@ -162,8 +162,17 @@ var WorldScene = new Phaser.Class({
         this.player = this.physics.add.sprite(2224,48,'player', 6);
         this.lever1 = this.physics.add.sprite (560,784, 'lever', 5).setScale(0.1);
         this.lever2 = this.physics.add.sprite (2128,2448, 'lever', 5).setScale(0.1);
+        this.lever3 = this.physics.add.sprite (208,1872, 'lever', 5).setScale(0.1);
 
-        this.bolt = this.physics.add.sprite(540,480, 'bolt', 5);
+        //spikes
+        this.bolt1 = this.physics.add.sprite (944,2192, 'bolt', 5);
+        this.bolt2 = this.physics.add.sprite (1136,1008, 'bolt', 5);
+        this.bolt3 = this.physics.add.sprite (1168,1104, 'bolt', 5);
+        this.bolt4 = this.physics.add.sprite (1040,1328, 'bolt', 5);
+        this.bolt5 = this.physics.add.sprite (784,1296, 'bolt', 5);
+        this.bolt6 = this.physics.add.sprite (1168,1264, 'bolt', 5);
+        this.bolt7 = this.physics.add.sprite (816,1264, 'bolt', 5);
+        this.bolt8 = this.physics.add.sprite (1104,1488, 'bolt', 5);
 
         // this.physics.add.group({
         //     key: 'bolt',
@@ -185,24 +194,80 @@ var WorldScene = new Phaser.Class({
             this.lever2.disableBody(true,true);
         }, null, this);
 
-        //add bolt overlap
-        this.physics.add.overlap(this.player, this.bolt, function() {
-            this.bolt.body.enable = false;
+        this.physics.add.overlap(this.player, this.lever3, function() {
+            console.log("Hello");
+            this.levers = this.levers + 1;
+            this.events.emit('addScore');
+            this.lever3.disableBody(true,true);
+        }, null, this);
+
+        //add bolts overlap
+        this.physics.add.overlap(this.player, this.bolt1, function() {
+            this.bolt1.body.enable = false;
             this.events.emit('removeHealth');
-            this.cameras.main.shake(150);
-            this.time.addEvent({ delay: 2000, callback: this.testFunct , callbackScope: this });
+            this.time.addEvent({ delay: 2000, callback: this.testFunct1 , callbackScope: this });
+            this.cameras.main.shake(150);             
+        }, null, this);
+
+        this.physics.add.overlap(this.player, this.bolt2, function() {
+            this.bolt2.body.enable = false;
+            this.events.emit('removeHealth');
+            this.time.addEvent({ delay: 2000, callback: this.testFunct2 , callbackScope: this });
+            this.cameras.main.shake(150);             
+        }, null, this);
+
+        this.physics.add.overlap(this.player, this.bolt3, function() {
+            this.bolt3.body.enable = false;
+            this.events.emit('removeHealth');
+            this.time.addEvent({ delay: 2000, callback: this.testFunct3 , callbackScope: this });
+            this.cameras.main.shake(150);             
+        }, null, this);
+
+        this.physics.add.overlap(this.player, this.bolt4, function() {
+            this.bolt4.body.enable = false;
+            this.events.emit('removeHealth');
+            this.time.addEvent({ delay: 2000, callback: this.testFunct4 , callbackScope: this });
+            this.cameras.main.shake(150);             
+        }, null, this);
+
+        this.physics.add.overlap(this.player, this.bolt5, function() {
+            this.bolt5.body.enable = false;
+            this.events.emit('removeHealth');
+            this.time.addEvent({ delay: 2000, callback: this.testFunct5 , callbackScope: this });
+            this.cameras.main.shake(150);            
+        }, null, this);
+
+        this.physics.add.overlap(this.player, this.bolt6, function() {
+            this.bolt6.body.enable = false;
+            this.events.emit('removeHealth');
+            this.time.addEvent({ delay: 2000, callback: this.testFunct6 , callbackScope: this });
+            this.cameras.main.shake(150);             
+        }, null, this);
+
+        this.physics.add.overlap(this.player, this.bolt7, function() {
+            this.bolt7.body.enable = false;
+            this.events.emit('removeHealth');
+            this.time.addEvent({ delay: 2000, callback: this.testFunct7 , callbackScope: this });
+            this.cameras.main.shake(150);             
+        }, null, this);
+
+        this.physics.add.overlap(this.player, this.bolt8, function() {
+            this.bolt8.body.enable = false;
+            this.events.emit('removeHealth');
+            this.time.addEvent({ delay: 2000, callback: this.testFunct8 , callbackScope: this });            
+            this.cameras.main.shake(150);           
         }, null, this);
 
         this.physics.world.bounds.width = floor.widthInPixels;
         this.physics.world.bounds.height = floor.heightInPixels;
         this.player.setCollideWorldBounds(true);
 
-        // wallLayer.setCollisionBetween(0,349);
-        // CILayer.setCollisionBetween(0, 349);
-        // decorLayer.setCollisionBetween(0, 349);
-        // this.physics.add.collider(this.player, wallLayer);
-        // this.physics.add.collider(this.player, CILayer);
-        // this.physics.add.collider(this.player, decorLayer);
+        wallLayer.setCollisionBetween(0,349);
+        CILayer.setCollisionBetween(0, 349);
+        decorLayer.setCollisionBetween(0, 349);
+        this.physics.add.collider(this.player, wallLayer);
+        this.physics.add.collider(this.player, CILayer);
+        //this.physics.add.collider(this.player, decorLayer);
 
         this.cameras.main.setBounds(0, 0, floor.widthInPixels, floor.heightInPixels);
         this.cameras.main.startFollow(this.player);
@@ -224,9 +289,51 @@ var WorldScene = new Phaser.Class({
         this.key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
     },
-    testFunct: function() {
+    testFunct1: function () {
         console.log("asd");
-        this.bolt.body.enable = true
+        this.bolt1.body.enable = true;
+    },
+
+    testFunct2: function () {
+        console.log("asd");
+        this.bolt2.body.enable = true;
+    },
+
+    testFunct3: function () {
+        console.log("asd");
+        this.bolt3.body.enable = true;
+    },
+
+    testFunct4: function () {
+        console.log("asd");
+        this.bolt4.body.enable = true;
+    },
+
+    testFunct5: function () {
+        console.log("asd");
+        this.bolt5.body.enable = true;
+    },
+
+    testFunct6: function () {
+        console.log("asd");
+        this.bolt6.body.enable = true;
+    },
+
+    testFunct7: function () {
+        console.log("asd");
+        this.bolt7.body.enable = true;
+    },
+
+    testFunct8: function () {
+        console.log("asd");
+        this.bolt8.body.enable = true;
+    },
+
+    get testFunct() {
+        return this._testFunct;
+    },
+    set testFunct(value) {
+        this._testFunct = value;
     },
     battleSceneChange: function() {
         console.log("asd");
@@ -238,20 +345,20 @@ var WorldScene = new Phaser.Class({
 
         if (this.cursors.left.isDown)
         {
-            this.player.body.setVelocityX(-120);
+            this.player.body.setVelocityX(-180);
         }
         else if (this.cursors.right.isDown)
         {
-            this.player.body.setVelocityX(120);
+            this.player.body.setVelocityX(180);
         }
 
         if (this.cursors.up.isDown)
         {
-            this.player.body.setVelocityY(-120);
+            this.player.body.setVelocityY(-180);
         }
         else if (this.cursors.down.isDown)
         {
-            this.player.body.setVelocityY(120);
+            this.player.body.setVelocityY(180);
         }
 
         if (this.cursors.left.isDown)
@@ -277,8 +384,8 @@ var WorldScene = new Phaser.Class({
             this.player.anims.stop();
         }
 
-        if(this.levers == 1){
-            this.cameras.main.shake(250);
+        if(this.levers == 2){
+            this.cameras.main.shake(300);
             this.time.addEvent({ delay: 3000, callback: this.battleSceneChange , callbackScope: this });
         }
 
@@ -363,7 +470,7 @@ var BossScene = new Phaser.Class({
             frameRate: 10,
             repeat: -1
         });
-        this.Bplayer = this.physics.add.sprite(640,480,'player', 6);
+        this.Bplayer = this.physics.add.sprite(368,944,'player', 6);
 
         //final Layer Spawn
         const B_F_Decor = this.make.tilemap({ key: "forge_f_decor", tileWidth: 32, tileHeight: 32 });
@@ -508,6 +615,7 @@ var LevelUIScene = new Phaser.Class({
         create: function ()
         {
             //  Our Text object to display the Score
+
             var info = this.add.text(875, 800, 'Levers Found: 0', { font: '24px Arial', fill: '#FFFFFF' });
             var life = this.add.text(50, 800, 'Health: ' + globalCharHealth , { font: '24px Arial', fill: '#FFFFFF' });
 
