@@ -297,10 +297,10 @@ var BattleScene = new Phaser.Class({
 
             // player character - warrior
             //scene, x, y, texture, frame, type, hp, damage, specialDamage, specialCharge
-            var warrior = new PlayerCharacter(this, 95, 350, "player", 1, "Thorvik", 100, 35, 100, 1, 184, 445);
+            var warrior = new PlayerCharacter(this, 95, 350, "player", 1, "Thorvik", 100, 35, 100, 1, 3, 60);
             this.add.existing(warrior);
 
-            var dragonblue = new Enemy(this, 460, 120, "dragonblue", 2, "Blue Dragon", 180, 13, 10, 4, 368, 225);
+            var dragonblue = new Enemy(this, 460, 350, "dragonblue", 2, "Blue Dragon", 180, 13, 10, 4, 467, 60);
             this.add.existing(dragonblue);
 
             // array with character
@@ -481,7 +481,7 @@ var Unit = new Phaser.Class({
         }
     },
     heal: function(target) {
-        this.hp.increase(25, this.maxHp);
+        this.hp.increase(25, 100);
         this.scene.events.emit("Message", this.type + " heals 25 hp");
     },
     chargeSpecial: function() {
@@ -527,7 +527,7 @@ var HealthBar = new Phaser.Class({
         this.x = x;
         this.y = y;
         this.value = 100;
-        this.p = 172 / 100;
+        this.p = 164 / 100;
 
         this.draw();
 
@@ -550,9 +550,9 @@ var HealthBar = new Phaser.Class({
     increase: function(amount, maxHp) {
         this.value += amount;
 
-        if (this.value < maxHp)
+        if (this.value > 100)
         {
-            this.value = maxHp;
+            this.value = 100;
         }
 
         this.draw();
@@ -566,12 +566,12 @@ var HealthBar = new Phaser.Class({
 
         //  BG
         this.bar.fillStyle(0x000000);
-        this.bar.fillRect(this.x, this.y, 178, 20);
+        this.bar.fillRect(this.x, this.y, 170, 20);
 
         //  Health
 
         this.bar.fillStyle(0xffffff);
-        this.bar.fillRect(this.x + 3, this.y + 3, 172, 14);
+        this.bar.fillRect(this.x + 3, this.y + 3, 164, 14);
 
         if (this.value < 30)
         {
@@ -740,6 +740,10 @@ var UIScene = new Phaser.Class({
         this.graphics.fillStyle(0x031f4c, 1);
 
         // background for enemy menu
+        this.graphics.strokeRect(467, 3, 171, 51);
+        this.graphics.fillRect(467, 4, 170, 50);
+
+        // background for message menu
         this.graphics.strokeRect(163, 484, 475, 151);
         this.graphics.fillRect(163, 485, 474, 150);
 
@@ -748,16 +752,16 @@ var UIScene = new Phaser.Class({
         this.graphics.fillRect(3, 485, 155, 150);
 
         // background for hero menu
-        this.graphics.strokeRect(3, 428, 171, 51);
-        this.graphics.fillRect(3, 429, 170, 50);
+        this.graphics.strokeRect(3, 3, 171, 51);
+        this.graphics.fillRect(3, 4, 170, 50);
 
         // basic container to hold all menus
         this.menus = this.add.container();
 
         // offset the actual text menu by 3
-        this.heroesMenu = new HeroesMenu(9, 436, this);
+        this.heroesMenu = new HeroesMenu(9, 11, this);
         this.actionsMenu = new ActionsMenu(9, 490, this);
-        this.enemiesMenu = new EnemiesMenu(169, 490, this);
+        this.enemiesMenu = new EnemiesMenu(473, 11, this);
 
         // the currently selected menu
         this.currentMenu = this.actionsMenu;
@@ -837,14 +841,14 @@ var Message = new Phaser.Class({
 
     initialize:
     function Message(scene, events) {
-        Phaser.GameObjects.Container.call(this, scene, 160, 30);
+        Phaser.GameObjects.Container.call(this, scene, 400, 499);
         var graphics = this.scene.add.graphics();
         this.add(graphics);
         graphics.lineStyle(1, 0xffffff, 0.8);
         graphics.fillStyle(0x031f4c, 0.3);
-        graphics.strokeRect(-110, -15, 220, 40);
-        graphics.fillRect(-110, -15, 220, 40);
-        this.text = new Phaser.GameObjects.Text(scene, 0, 0, "", { color: "#ffffff", align: "center", fontSize: 13, wordWrap: { width: 220, useAdvancedWrap: true }});
+        graphics.strokeRect(-237, -15, 475, 151);
+        graphics.fillRect(-237, -15, 474, 150);
+        this.text = new Phaser.GameObjects.Text(scene, 0, 50, "", { color: "#ffffff", align: "center", fontSize: 24, wordWrap: { width: 474, useAdvancedWrap: true }});
         this.add(this.text);
         this.text.setOrigin(0.5);
         events.on("Message", this.showMessage, this);
