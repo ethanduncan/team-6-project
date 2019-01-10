@@ -83,8 +83,9 @@ var MenuScene = new Phaser.Class({
         {
             if(this.menuNumber===0){
                 //Revert after testing
-                this.scene.start("WorldScene");
+                //this.scene.start("BattleScene", {pc_texture: "player", pc_type: "Thorvik", pc_attack: 15, pc_special: 50, pc_spCharge: 1, e_texture: "dragonblue", e_type: "Black Dragon", e_hp: 225, e_attack: 20, e_special:10});
                 //this.scene.start("BossScene");
+                this.scene.start("WorldScene");
             }
         }
     });
@@ -206,56 +207,56 @@ var WorldScene = new Phaser.Class({
             this.bolt1.body.enable = false;
             this.events.emit('removeHealth');
             this.time.addEvent({ delay: 2000, callback: this.testFunct1 , callbackScope: this });
-            this.cameras.main.shake(150);             
+            this.cameras.main.shake(150);
         }, null, this);
 
         this.physics.add.overlap(this.player, this.bolt2, function() {
             this.bolt2.body.enable = false;
             this.events.emit('removeHealth');
             this.time.addEvent({ delay: 2000, callback: this.testFunct2 , callbackScope: this });
-            this.cameras.main.shake(150);             
+            this.cameras.main.shake(150);
         }, null, this);
 
         this.physics.add.overlap(this.player, this.bolt3, function() {
             this.bolt3.body.enable = false;
             this.events.emit('removeHealth');
             this.time.addEvent({ delay: 2000, callback: this.testFunct3 , callbackScope: this });
-            this.cameras.main.shake(150);             
+            this.cameras.main.shake(150);
         }, null, this);
 
         this.physics.add.overlap(this.player, this.bolt4, function() {
             this.bolt4.body.enable = false;
             this.events.emit('removeHealth');
             this.time.addEvent({ delay: 2000, callback: this.testFunct4 , callbackScope: this });
-            this.cameras.main.shake(150);             
+            this.cameras.main.shake(150);
         }, null, this);
 
         this.physics.add.overlap(this.player, this.bolt5, function() {
             this.bolt5.body.enable = false;
             this.events.emit('removeHealth');
             this.time.addEvent({ delay: 2000, callback: this.testFunct5 , callbackScope: this });
-            this.cameras.main.shake(150);            
+            this.cameras.main.shake(150);
         }, null, this);
 
         this.physics.add.overlap(this.player, this.bolt6, function() {
             this.bolt6.body.enable = false;
             this.events.emit('removeHealth');
             this.time.addEvent({ delay: 2000, callback: this.testFunct6 , callbackScope: this });
-            this.cameras.main.shake(150);             
+            this.cameras.main.shake(150);
         }, null, this);
 
         this.physics.add.overlap(this.player, this.bolt7, function() {
             this.bolt7.body.enable = false;
             this.events.emit('removeHealth');
             this.time.addEvent({ delay: 2000, callback: this.testFunct7 , callbackScope: this });
-            this.cameras.main.shake(150);             
+            this.cameras.main.shake(150);
         }, null, this);
 
         this.physics.add.overlap(this.player, this.bolt8, function() {
             this.bolt8.body.enable = false;
             this.events.emit('removeHealth');
-            this.time.addEvent({ delay: 2000, callback: this.testFunct8 , callbackScope: this });            
-            this.cameras.main.shake(150);           
+            this.time.addEvent({ delay: 2000, callback: this.testFunct8 , callbackScope: this });
+            this.cameras.main.shake(150);
         }, null, this);
 
         this.physics.world.bounds.width = floor.widthInPixels;
@@ -509,7 +510,7 @@ var BossScene = new Phaser.Class({
     },
     startBattle: function() {
         console.log("starting scene");
-        this.scene.start("BattleScene");
+        this.scene.start("BattleScene", {pc_texture: "player", pc_type: "Thorvik", pc_attack: 15, pc_special: 50, pc_spCharge: 1, e_texture: "dragonblue", e_type: "Black Dragon", e_hp: 225, e_attack: 20, e_special:10});
     },
     update: function (time, delta)
     {
@@ -625,7 +626,7 @@ var LevelUIScene = new Phaser.Class({
             var ourGame = this.scene.get('WorldScene');
             var bossGame = this.scene.get('BossScene');
 
-            this.message = new Message(this,ourGame.events, 552, 600);
+            this.message = new Message(this,ourGame.events, 552, 600, 475, 151);
             this.add.existing(this.message);
 
 
@@ -691,7 +692,20 @@ var BattleScene = new Phaser.Class({
 
         function BattleScene ()
         {
-            Phaser.Scene.call(this, { key: "BattleScene" });
+            Phaser.Scene.call(this, { key: "BattleScene" })
+        },
+        init: function (data)
+        {
+            this.pc_texture = data.pc_texture;
+            this.pc_type = data.pc_type;
+            this.pc_attack = data.pc_attack;
+            this.pc_special = data.pc_special;
+            this.pc_spCharge = data.pc_spCharge;
+            this.e_texture = data.e_texture;
+            this.e_type = data.e_type;
+            this.e_hp = data.e_hp;
+            this.e_attack = data.e_attack;
+            this.e_special = data.e_special;
         },
         create: function ()
         {
@@ -700,18 +714,18 @@ var BattleScene = new Phaser.Class({
             this.cameras.main.setBackgroundColor("rgba(220, 220, 220, 0.5)");
 
             // player character - warrior
-            //scene, x, y, texture, frame, type, hp, damage, specialDamage, specialCharge
+            //scene, x, y, texture, frame, type, hp, damage, specialDamage, specialCharge, hpx, hpy
             // var warrior = new PlayerCharacter(this, 95, 350, "player", 1, "Thorvik", 100, 35, 100, 1, 184, 445);
-            var warrior = new PlayerCharacter(this, 95, 350, "player", 1, "Thorvik", globalCharHealth, 25, 50, 1, 3, 60);
-            this.add.existing(warrior);
+            var hero = new PlayerCharacter(this, 95, 350, this.pc_texture, 1, this.pc_type, globalCharHealth, this.pc_attack, this.pc_special, this.pc_spCharge, 3, 160);
+            this.add.existing(hero);
 
-            var dragonblue = new Enemy(this, 932, 350, "dragonblue", 2, "Black Dragon", 225, 20, 10, 4, 932, 60);
-            this.add.existing(dragonblue);
+            var enemy = new Enemy(this, 932, 350, this.e_texture, 2, this.e_type, this.e_hp, this.e_attack, this.e_special, 4, 932, 160);
+            this.add.existing(enemy);
 
             // array with character
-            this.heroes = [ warrior ];
+            this.heroes = [ hero ];
             // array with enemies
-            this.enemies = [ dragonblue ];
+            this.enemies = [ enemy ];
             // array with both parties, who will attack
             this.units = this.heroes.concat(this.enemies);
 
@@ -804,89 +818,6 @@ var Unit = new Phaser.Class({
     },
     heal: function(target) {
         this.hp.increase(25, this.maxHp);
-        this.scene.events.emit("Message", this.type + " heals 25 hp");
-    },
-    chargeSpecial: function() {
-        this.specialCharge -= 1;
-        if(this.specialCharge < 0) {
-            this.specialCharge = 0;
-        }
-    }
-});
-
-    var Menu = new Phaser.Class({
-        Extends: Phaser.GameObjects.Container,
-
-        initialize:
-
-        function Menu(x, y, scene, heroes) {
-            Phaser.GameObjects.Container.call(this, scene, x, y);
-            this.menuItems = [];
-            this.menuItemIndex = 0;
-            this.heroes = heroes;
-            this.x = x;
-            this.y = y;
-            // scene.cameras.main.setZoom(2);
-        },
-        addMenuItem: function(unit) {
-            var menuItem = new MenuItem(0, this.menuItems.length * 20, unit, this.scene);
-            this.menuItems.push(menuItem);
-            this.add(menuItem);
-        },
-        moveSelectionUp: function() {
-            this.menuItems[this.menuItemIndex].deselect();
-            this.menuItemIndex--;
-            if(this.menuItemIndex < 0)
-                this.menuItemIndex = this.menuItems.length - 1;
-            this.menuItems[this.menuItemIndex].select();
-        },
-        moveSelectionDown: function() {
-            this.menuItems[this.menuItemIndex].deselect();
-            this.menuItemIndex++;
-            if(this.menuItemIndex >= this.menuItems.length)
-                this.menuItemIndex = 0;
-            this.menuItems[this.menuItemIndex].select();
-        },
-        // select the menu as a whole and an element with index from it
-        select: function(index) {
-            if(!index)
-                index = 0;
-            this.menuItems[this.menuItemIndex].deselect();
-            this.menuItemIndex = index;
-            this.menuItems[this.menuItemIndex].select();
-        },
-        // deselect this menu
-        deselect: function() {
-            this.menuItems[this.menuItemIndex].deselect();
-            this.menuItemIndex = 0;
-        },
-        confirm: function() {
-            // when the player confirms his selection, do the action
-        },
-        clear: function() {
-            for(var i = 0; i < this.menuItems.length; i++) {
-                this.menuItems[i].destroy();
-            }
-            this.menuItems.length = 0;
-            this.menuItemIndex = 0;
-        },
-        remap: function(units) {
-            this.clear();
-            for(var i = 0; i < units.length; i++) {
-                var unit = units[i];
-                this.addMenuItem(unit.type);
-            }
-    },
-    takeDamage: function(damage) {
-
-        if(this.hp.decrease(damage)) {
-            this.hp = 0;
-            this.alive = false;
-            this.destroy();
-        }
-    },
-    heal: function(target) {
-        this.hp.increase(25, 100);
         this.scene.events.emit("Message", this.type + " heals 25 hp");
     },
     chargeSpecial: function() {
@@ -1142,29 +1073,34 @@ var UIScene = new Phaser.Class({
         this.graphics.lineStyle(1, 0xffffff);
         this.graphics.fillStyle(0x031f4c, 1);
 
+        this.graphics1 = this.add.graphics();
+        this.graphics1.fillStyle(0x000000, 1);
+        this.graphics1.fillRect(0, 0, 1105, 100);
+        this.graphics1.fillRect(0, 744, 1105, 100);
+
         // background for enemy menu
-        this.graphics.strokeRect(932, 3, 171, 51);
-        this.graphics.fillRect(932, 4, 170, 50);
+        this.graphics.strokeRect(932, 103, 171, 51);
+        this.graphics.fillRect(932, 104, 170, 50);
 
         // background for message menu
-        this.graphics.strokeRect(163, 484, 475, 151);
-        this.graphics.fillRect(163, 485, 474, 150);
+        this.graphics.strokeRect(213, 584, 890, 151);
+        this.graphics.fillRect(213, 585, 889, 150);
 
         // background for action menu
-        this.graphics.strokeRect(3, 484, 156, 151);
-        this.graphics.fillRect(3, 485, 155, 150);
+        this.graphics.strokeRect(3, 584, 206, 151);
+        this.graphics.fillRect(3, 585, 205, 150);
 
         // background for hero menu
-        this.graphics.strokeRect(3, 3, 171, 51);
-        this.graphics.fillRect(3, 4, 170, 50);
+        this.graphics.strokeRect(3, 103, 171, 51);
+        this.graphics.fillRect(3, 104, 170, 50);
 
         // basic container to hold all menus
         this.menus = this.add.container();
 
         // offset the actual text menu by 3
-        this.heroesMenu = new HeroesMenu(9, 11, this);
-        this.actionsMenu = new ActionsMenu(9, 490, this);
-        this.enemiesMenu = new EnemiesMenu(938, 11, this);
+        this.heroesMenu = new HeroesMenu(9, 111, this);
+        this.actionsMenu = new ActionsMenu(9, 590, this);
+        this.enemiesMenu = new EnemiesMenu(938, 111, this);
 
         // the currently selected menu
         this.currentMenu = this.actionsMenu;
@@ -1188,7 +1124,7 @@ var UIScene = new Phaser.Class({
         this.events.on("Enemy", this.onEnemy, this);
         this.events.on("Heal", this.onHeal, this);
 
-        this.message = new Message(this, this.battleScene.events, 400, 499);
+        this.message = new Message(this, this.battleScene.events, 453, 584, 890, 151);
         this.add.existing(this.message);
 
         this.battleScene.nextTurn();
@@ -1243,16 +1179,16 @@ var Message = new Phaser.Class({
     Extends: Phaser.GameObjects.Container,
 
     initialize:
-    function Message(scene, events, x, y) {
+    function Message(scene, events, x, y, width, height) {
 
         Phaser.GameObjects.Container.call(this, scene, x, y);
         var graphics = this.scene.add.graphics();
         this.add(graphics);
         graphics.lineStyle(1, 0xffffff, 0.8);
         graphics.fillStyle(0x031f4c, 0.3);
-        graphics.strokeRect(-237, -15, 475, 151);
-        graphics.fillRect(-237, -15, 474, 150);
-        this.text = new Phaser.GameObjects.Text(scene, 0, 50, "", { color: "#ffffff", align: "center", fontSize: 24, wordWrap: { width: 474, useAdvancedWrap: true }});
+        graphics.strokeRect(x, y, width, height);
+        graphics.fillRect(x, y, (width-1), (height-1));
+        this.text = new Phaser.GameObjects.Text(scene, 200, 75, "", { color: "#ffffff", align: "center", fontSize: 24, wordWrap: { width: 889, useAdvancedWrap: true }});
         this.add(this.text);
         this.text.setOrigin(0.5);
         events.on("Message", this.showMessage, this);
