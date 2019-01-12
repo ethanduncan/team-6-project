@@ -1,6 +1,6 @@
-import { bs } from "./bootScene.js";
-import { ms } from "./menuScene.js";
-import { unit } from "./unit.js";
+import { bs } from "./BootScene.js";
+import { ms } from "./MenuScene.js";
+import { unit } from "./Unit.js";
 
 var BootScene = bs;
 
@@ -93,11 +93,8 @@ var WorldScene = new Phaser.Class({
         this.bolt7 = this.physics.add.sprite (816,1264, 'bolt', 5);
         this.bolt8 = this.physics.add.sprite (1104,1488, 'bolt', 5);
 
-        // this.physics.add.group({
-        //     key: 'bolt',
-        //     repeat: 11,
-        //     setXY: { x: 12, y: 0, stepX: 70 }
-        // });
+        //health
+        this.heart1 = this.physics.add.sprite (2224,90, 'health', 5).setScale(0.5);
 
         this.physics.add.overlap(this.player, this.lever1, function() {
             console.log("Hello");
@@ -175,6 +172,17 @@ var WorldScene = new Phaser.Class({
             this.events.emit('removeHealth');
             this.time.addEvent({ delay: 2000, callback: this.testFunct8 , callbackScope: this });
             this.cameras.main.shake(150);
+        }, null, this);
+
+        this.physics.add.overlap(this.player, this.heart1, function() {
+            if(globalCharHealth<100){
+                this.heart1.body.enable = false;
+                this.events.emit('addHealth');
+                this.time.addEvent({ delay: 2000, callback: console.log("doneso") , callbackScope: this });
+                this.heart1.disableBody(true,true);
+            }else{
+                this.events.emit("Message", "Health Full");
+            }
         }, null, this);
 
         this.physics.world.bounds.width = floor.widthInPixels;
@@ -566,6 +574,25 @@ var LevelUIScene = new Phaser.Class({
                 ourGame.events.emit("Message", "-5 Health");
 
                 life.setText('Health: ' + globalCharHealth);
+
+            }, this);
+
+            ourGame.events.on('addHealth', function () {
+                if(globalCharHealth<95){
+
+                    globalCharHealth += 5;
+
+                    ourGame.events.emit("Message", "+5 Health");
+
+                    life.setText('Health: ' + globalCharHealth);
+                }else{
+                    
+                    globalCharHealth = 100;
+
+                    ourGame.events.emit("Message", "+5 Health");
+
+                    life.setText('Health: ' + globalCharHealth);
+                }
 
             }, this);
 
