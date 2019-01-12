@@ -36,6 +36,7 @@ var bs = new Phaser.Class({
         this.load.image('bolt', 'assets/traps/bolt.png');
         this.load.image('dead', 'assets/ya_dead.png');
         this.load.image('infoImage', 'assets/map/Infoscroll.png');
+        this.load.image('heart', 'assets/traps/heart.png');
         // this.load.image('dead', 'assets/map/Newgame.png');
 
         //music
