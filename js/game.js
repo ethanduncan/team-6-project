@@ -1,6 +1,6 @@
-import { bs } from "./BootScene.js";
-import { ms } from "./MenuScene.js";
-import { unit } from "./Unit.js";
+import { bs } from "./bootScene.js";
+import { ms } from "./menuScene.js";
+import { unit } from "./unit.js";
 
 var BootScene = bs;
 
@@ -94,7 +94,7 @@ var WorldScene = new Phaser.Class({
         this.bolt8 = this.physics.add.sprite (1104,1488, 'bolt', 5);
 
         //health
-        this.heart1 = this.physics.add.sprite (2224,90, 'health', 5).setScale(0.5);
+        this.heart1 = this.physics.add.sprite (2224,90, 'heart', 5).setScale(0.03);
 
         this.physics.add.overlap(this.player, this.lever1, function() {
             console.log("Hello");
