@@ -239,7 +239,8 @@ var WorldScene = new Phaser.Class({
             }else{
                 this.events.emit("Message", "Health Full");
             }
-          
+        }, null, this);
+
         this.physics.add.overlap(this.player, this.enemy1, function() {
             this.enemy1.body.enable = false;
             this.events.emit('Message', 'You\'ve encountered an enemy!');
