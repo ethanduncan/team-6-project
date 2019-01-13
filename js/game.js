@@ -93,9 +93,7 @@ var WorldScene = new Phaser.Class({
         this.bolt7 = this.physics.add.sprite (816,1264, 'bolt', 5);
         this.bolt8 = this.physics.add.sprite (1104,1488, 'bolt', 5);
 
-        //health
-        this.heart1 = this.physics.add.sprite (2224, 90, 'heart', 5).setScale(0.03);
-
+        //enemies
         this.boss1 = this.physics.add.sprite (2224, 150, 'dragonblack', 5).setScale(0.5);
 
         this.enemy1 = this.physics.add.sprite (2224, 170, 'eyedrop', 5);
