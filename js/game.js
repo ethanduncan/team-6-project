@@ -101,9 +101,13 @@ var WorldScene = new Phaser.Class({
         this.heart5 = this.physics.add.sprite (1328,2832, 'heart', 5).setScale(0.03);
 
         this.enemy1 = this.physics.add.sprite (2224, 170, 'eyedrop', 5);
-        this.enemy2 = this.physics.add.sprite (2224, 190, 'kobold', 5);
-        this.enemy3 = this.physics.add.sprite (2224, 200, 'koboldmage', 5);
-        this.enemy4 = this.physics.add.sprite (2224, 220, 'koboldleader', 5);
+        this.enemy2 = this.physics.add.sprite (880, 464, 'koboldmage', 5);
+        this.enemy3 = this.physics.add.sprite (304, 1040, 'koboldleader', 5);
+        this.enemy5 = this.physics.add.sprite (240, 2576, 'eyedrop', 5);
+
+        this.enemy4 = this.physics.add.sprite (2128, 2480, 'eyedrop', 5);
+        this.enemy6 = this.physics.add.sprite (2544, 2544, 'eyedrop', 5);
+        this.enemy7 = this.physics.add.sprite (2352, 2544, 'eyedrop', 5);
 
         this.subboss1 = this.physics.add.sprite (2224, 240, 'bigkobold', 5);
         this.subboss2 = this.physics.add.sprite (2224, 260, 'bonedragon', 5);
@@ -267,6 +271,27 @@ var WorldScene = new Phaser.Class({
             this.events.emit('Message', 'You\'ve encountered an enemy!');
             this.time.addEvent({ delay: 1000, callback: this.startBattle4, callbackScope: this });
             this.enemy4.disableBody(true,true);
+        }, null, this);
+
+        this.physics.add.overlap(this.player, this.enemy5, function() {
+            this.enemy5.body.enable = false;
+            this.events.emit('Message', 'You\'ve encountered an enemy!');
+            this.time.addEvent({ delay: 1000, callback: this.startBattle4, callbackScope: this });
+            this.enemy5.disableBody(true,true);
+        }, null, this);
+
+        this.physics.add.overlap(this.player, this.enemy6, function() {
+            this.enemy6.body.enable = false;
+            this.events.emit('Message', 'You\'ve encountered an enemy!');
+            this.time.addEvent({ delay: 1000, callback: this.startBattle4, callbackScope: this });
+            this.enemy6.disableBody(true,true);
+        }, null, this);
+
+        this.physics.add.overlap(this.player, this.enemy7, function() {
+            this.enemy7.body.enable = false;
+            this.events.emit('Message', 'You\'ve encountered an enemy!');
+            this.time.addEvent({ delay: 1000, callback: this.startBattle4, callbackScope: this });
+            this.enemy7.disableBody(true,true);
         }, null, this);
 
         this.physics.add.overlap(this.player, this.subboss1, function() {
