@@ -558,13 +558,25 @@ var BossScene = new Phaser.Class({
             repeat: -1
         });
         this.Bplayer = this.physics.add.sprite(368,944,'player', 6);
-        this.boss = this.physics.add.sprite (500, 200, 'dragonblue', 5);
+
+        var r = Math.floor(Math.random() * 3);
+
+        if(r == 1){
+            this.boss1 = this.physics.add.sprite (355, 400, 'dragonblack', 5);
+            this.physics.add.overlap(this.Bplayer, this.boss1, this.startBossBattle1, null, this);
+            this.time.addEvent({ delay: 10000, callback: this.startBossBattle1, callbackScope: this });
+        } else if (r == 2) {
+            this.boss2 = this.physics.add.sprite (355, 400, 'bonedragon', 5);
+            this.physics.add.overlap(this.Bplayer, this.boss2, this.startBossBattle2, null, this);
+            this.time.addEvent({ delay: 10000, callback: this.startBossBattle2, callbackScope: this });
+        } else {
+            this.boss3 = this.physics.add.sprite (355, 400, 'bigkobold', 5);
+            this.physics.add.overlap(this.Bplayer, this.boss3, this.startBossBattle3, null, this);
+            this.time.addEvent({ delay: 10000, callback: this.startBossBattle3, callbackScope: this });
+        }
 
         // this.physics.add.overlap(this.bPlayer, this.boss, function() {
         // }, null, this);
-
-        this.physics.add.overlap(this.Bplayer, this.boss, this.startBossBattle, null, this);
-        this.time.addEvent({ delay: 10000, callback: this.startBossBattle, callbackScope: this });
 
         //final Layer Spawn
         const B_F_Decor = this.make.tilemap({ key: "forge_f_decor", tileWidth: 32, tileHeight: 32 });
@@ -591,10 +603,20 @@ var BossScene = new Phaser.Class({
 
         this.cursors = this.input.keyboard.createCursorKeys();
     },
-    startBossBattle: function() {
+
+    startBossBattle1: function() {
         console.log("starting scene");
-        this.scene.sleep("WorldScene");
-        this.scene.run("BattleScene", {pc_texture: "player", pc_type: "Thorvik", pc_attack: 20, pc_special: 45, pc_spCharge: 2, e_texture: "dragonblack", e_type: "Black Dragon", e_hp: 225, e_attack: 20, e_special:10});
+        this.scene.start("BattleScene", {pc_texture: "player", pc_type: "Thorvik", pc_attack: 20, pc_special: 45, pc_spCharge: 2, e_texture: "dragonblack", e_type: "Black Dragon", e_hp: 225, e_attack: 20, e_special:10, final_battle:1});
+    },
+
+    startBossBattle2: function() {
+        console.log("starting scene");
+        this.scene.start("BattleScene", {pc_texture: "player", pc_type: "Thorvik", pc_attack: 20, pc_special: 45, pc_spCharge: 2, e_texture: "bonedragon", e_type: "Bone Dragon", e_hp: 155, e_attack: 25, e_special:20, final_battle:1});
+    },
+
+    startBossBattle3: function() {
+        console.log("starting scene");
+        this.scene.start("BattleScene", {pc_texture: "player", pc_type: "Thorvik", pc_attack: 20, pc_special: 45, pc_spCharge: 2, e_texture: "bigkobold", e_type: "Big Kobold", e_hp: 70, e_attack: 25, e_special:20, final_battle:1});
     },
 
     update: function (time, delta)
@@ -796,6 +818,7 @@ var BattleScene = new Phaser.Class({
             this.e_hp = data.e_hp;
             this.e_attack = data.e_attack;
             this.e_special = data.e_special;
+            this.final_battle = data.final_battle;
         },
         create: function ()
         {
@@ -852,6 +875,10 @@ var BattleScene = new Phaser.Class({
                         this.scene.remove("WorldScene");
                         this.scene.remove("LevelUIScene");
                         this.scene.start("DeathScene");
+                    } else if(this.final_battle == 1) {
+                        this.scene.remove("UIScene");
+                        this.scene.remove("BattleScene");
+                        this.scene.start("WinScene");
                     } else {
                         this.scene.remove("UIScene");
                         this.scene.remove("BattleScene");
