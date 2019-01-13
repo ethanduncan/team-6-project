@@ -141,12 +141,12 @@ var WorldScene = new Phaser.Class({
             this.cameras.main.shake(150);
         }, null, this);
 
-        this.physics.add.overlap(this.player, this.bolt2, function() {
-            this.bolt2.body.enable = false;
-            this.events.emit('removeHealth');
-            this.time.addEvent({ delay: 2000, callback: this.testFunct2 , callbackScope: this });
-            this.cameras.main.shake(150);
-        }, null, this);
+        //this.physics.add.overlap(this.player, this.bolt2, function() {
+        //    this.bolt2.body.enable = false;
+        //    this.events.emit('removeHealth');
+        //    this.time.addEvent({ delay: 2000, callback: this.testFunct2 , callbackScope: this });
+        //    this.cameras.main.shake(150);
+        //}, null, this);
 
         this.physics.add.overlap(this.player, this.bolt3, function() {
             this.bolt3.body.enable = false;
