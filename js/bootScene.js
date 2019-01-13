@@ -28,8 +28,6 @@ var bs = new Phaser.Class({
         this.load.spritesheet('player', 'assets/RPG_assets.png', { frameWidth: 16, frameHeight: 16 });
         this.load.image('background', 'assets/map/background.png');
         this.load.image('lever', 'assets/map/Lever.PNG');
-        this.load.image("dragonblue", "assets/Monsters/shadow_dragon.png");
-        this.load.image("dragonorrange", "assets/dragonorrange.png");
         this.load.image('start', 'assets/map/Newgame.png');
         this.load.image('battle', 'assets/map/battle2.png');
         this.load.image('logo', 'assets/map/logo.png');
@@ -40,6 +38,13 @@ var bs = new Phaser.Class({
         // this.load.image('dead', 'assets/map/Newgame.png');
         //Battle
         this.load.image('battleBackground', 'assets/wall_block.png');
+        this.load.image("dragonblack", "assets/Big\ Monsters/shadow_dragon_big.png");
+        this.load.image("eyedrop","assets/Monsters/azure_jelly.png");
+        this.load.image("kobold","assets/Monsters/gnoll.png");
+        this.load.image("koboldmage","assets/Monsters/gnoll_shaman.png");
+        this.load.image("koboldleader","assets/Monsters/gnoll_sergeant.png");
+        this.load.image("bonedragon", "assets/Big\ Monsters/bone_dragon_big.png");
+        this.load.image("bigkobold","assets/Big\ Monsters/big_kobold_big.png");
 
         //music
         this.load.audio('theme', 'assets/music/bensound-epic.mp3');

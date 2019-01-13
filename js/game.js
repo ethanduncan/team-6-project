@@ -100,8 +100,13 @@ var WorldScene = new Phaser.Class({
         this.heart4 = this.physics.add.sprite (2512,912, 'heart', 5).setScale(0.03);
         this.heart5 = this.physics.add.sprite (1328,2832, 'heart', 5).setScale(0.03);
 
+        this.enemy1 = this.physics.add.sprite (2224, 170, 'eyedrop', 5);
+        this.enemy2 = this.physics.add.sprite (2224, 190, 'kobold', 5);
+        this.enemy3 = this.physics.add.sprite (2224, 200, 'koboldmage', 5);
+        this.enemy4 = this.physics.add.sprite (2224, 220, 'koboldleader', 5);
 
-        this.enemy1 = this.physics.add.sprite (2224,150, 'dragonblue', 5);
+        this.subboss1 = this.physics.add.sprite (2224, 240, 'bigkobold', 5);
+        this.subboss2 = this.physics.add.sprite (2224, 260, 'bonedragon', 5);
 
         this.physics.add.overlap(this.player, this.lever1, function() {
             console.log("Hello");
@@ -234,6 +239,54 @@ var WorldScene = new Phaser.Class({
             }else{
                 this.events.emit("Message", "Health Full");
             }
+          
+        this.physics.add.overlap(this.player, this.enemy1, function() {
+            this.enemy1.body.enable = false;
+            this.events.emit('Message', 'You\'ve encountered an enemy!');
+            this.time.addEvent({ delay: 1000, callback: this.startBattle1, callbackScope: this });
+            this.enemy1.disableBody(true,true);
+        }, null, this);
+
+        this.physics.add.overlap(this.player, this.enemy2, function() {
+            this.enemy2.body.enable = false;
+            this.events.emit('Message', 'You\'ve encountered an enemy!');
+            this.time.addEvent({ delay: 1000, callback: this.startBattle2, callbackScope: this });
+            this.enemy2.disableBody(true,true);
+        }, null, this);
+
+        this.physics.add.overlap(this.player, this.enemy3, function() {
+            this.enemy3.body.enable = false;
+            this.events.emit('Message', 'You\'ve encountered an enemy!');
+            this.time.addEvent({ delay: 1000, callback: this.startBattle3, callbackScope: this });
+            this.enemy3.disableBody(true,true);
+        }, null, this);
+
+        this.physics.add.overlap(this.player, this.enemy4, function() {
+            this.enemy4.body.enable = false;
+            this.events.emit('Message', 'You\'ve encountered an enemy!');
+            this.time.addEvent({ delay: 1000, callback: this.startBattle4, callbackScope: this });
+            this.enemy4.disableBody(true,true);
+        }, null, this);
+
+        this.physics.add.overlap(this.player, this.subboss1, function() {
+            this.subboss1.body.enable = false;
+            this.events.emit('Message', 'You\'ve encountered an enemy!');
+            this.time.addEvent({ delay: 1000, callback: this.startSubBoss1, callbackScope: this });
+            this.subboss1.disableBody(true,true);
+        }, null, this);
+
+        this.physics.add.overlap(this.player, this.subboss2, function() {
+            this.subboss2.body.enable = false;
+            this.events.emit('Message', 'You\'ve encountered an enemy!');
+            this.time.addEvent({ delay: 1000, callback: this.startSubBoss2, callbackScope: this });
+            this.subboss2.disableBody(true,true);
+        }, null, this);
+
+        this.physics.add.overlap(this.player, this.boss1, function() {
+            this.boss1.body.enable = false;
+            this.events.emit('Message', 'You\'ve encountered an enemy!');
+            this.time.addEvent({ delay: 1000, callback: this.startBossBattle, callbackScope: this });
+            this.boss1.disableBody(true,true);
         }, null, this);
 
         this.physics.world.bounds.width = floor.widthInPixels;
@@ -267,11 +320,38 @@ var WorldScene = new Phaser.Class({
         this.key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
     },
-    startBattle: function() {
+
+    startBattle1: function() {
         console.log("starting scene");
         this.scene.sleep("WorldScene");
-        this.scene.run("BattleScene", {pc_texture: "player", pc_type: "Thorvik", pc_attack: 150, pc_special: 50, pc_spCharge: 1, e_texture: "dragonblue", e_type: "Black Dragon", e_hp: 225, e_attack: 20, e_special:10});
+        this.scene.run("BattleScene", {pc_texture: "player", pc_type: "Thorvik", pc_attack: 20, pc_special: 45, pc_spCharge: 2, e_texture: "eyedrop", e_type: "Eyedrop", e_hp: 30, e_attack: 17, e_special:20});
     },
+    startBattle2: function() {
+        console.log("starting scene");
+        this.scene.sleep("WorldScene");
+        this.scene.run("BattleScene", {pc_texture: "player", pc_type: "Thorvik", pc_attack: 20, pc_special: 45, pc_spCharge: 2, e_texture: "kobold", e_type: "Kobold", e_hp: 50, e_attack: 12, e_special:20});
+    },
+    startBattle3: function() {
+        console.log("starting scene");
+        this.scene.sleep("WorldScene");
+        this.scene.run("BattleScene", {pc_texture: "player", pc_type: "Thorvik", pc_attack: 20, pc_special: 45, pc_spCharge: 2, e_texture: "koboldmage", e_type: "Kobold Mage", e_hp: 40, e_attack: 19, e_special:20});
+    },
+    startBattle4: function() {
+        console.log("starting scene");
+        this.scene.sleep("WorldScene");
+        this.scene.run("BattleScene", {pc_texture: "player", pc_type: "Thorvik", pc_attack: 20, pc_special: 45, pc_spCharge: 2, e_texture: "koboldleader", e_type: "Kobold Leader", e_hp: 75, e_attack: 15, e_special:20});
+    },
+    startSubBoss1: function() {
+        console.log("starting scene");
+        this.scene.sleep("WorldScene");
+        this.scene.run("BattleScene", {pc_texture: "player", pc_type: "Thorvik", pc_attack: 20, pc_special: 45, pc_spCharge: 2, e_texture: "dragonskele", e_type: "Bone Dragon", e_hp: 155, e_attack: 25, e_special:20});
+    },
+    startSubBoss2: function() {
+        console.log("starting scene");
+        this.scene.sleep("WorldScene");
+        this.scene.run("BattleScene", {pc_texture: "player", pc_type: "Thorvik", pc_attack: 20, pc_special: 45, pc_spCharge: 2, e_texture: "bigkobold", e_type: "Big Kobold", e_hp: 70, e_attack: 25, e_special:20});
+    },
+
     testFunct1: function () {
         console.log("asd");
         this.bolt1.body.enable = true;
@@ -457,8 +537,8 @@ var BossScene = new Phaser.Class({
         // this.physics.add.overlap(this.bPlayer, this.boss, function() {
         // }, null, this);
 
-        this.physics.add.overlap(this.Bplayer, this.boss, this.startBattle, null, this);
-        this.time.addEvent({ delay: 10000, callback: this.startBattle, callbackScope: this });
+        this.physics.add.overlap(this.Bplayer, this.boss, this.startBossBattle, null, this);
+        this.time.addEvent({ delay: 10000, callback: this.startBossBattle, callbackScope: this });
 
         //final Layer Spawn
         const B_F_Decor = this.make.tilemap({ key: "forge_f_decor", tileWidth: 32, tileHeight: 32 });
@@ -485,9 +565,10 @@ var BossScene = new Phaser.Class({
 
         this.cursors = this.input.keyboard.createCursorKeys();
     },
-    startBattle: function() {
+    startBossBattle: function() {
         console.log("starting scene");
-        this.scene.start("BattleScene", {pc_texture: "player", pc_type: "Thorvik", pc_attack: 15, pc_special: 50, pc_spCharge: 1, e_texture: "dragonblue", e_type: "Black Dragon", e_hp: 225, e_attack: 20, e_special:10});
+        this.scene.sleep("WorldScene");
+        this.scene.run("BattleScene", {pc_texture: "player", pc_type: "Thorvik", pc_attack: 20, pc_special: 45, pc_spCharge: 2, e_texture: "dragonblack", e_type: "Black Dragon", e_hp: 225, e_attack: 20, e_special:10});
     },
 
     update: function (time, delta)
@@ -781,7 +862,7 @@ var Enemy = new Phaser.Class({
     function Enemy(scene, x, y, texture, frame, type, hp, damage, specialDamage, specialCharge, hpx, hpy) {
         Unit.call(this, scene, x, y, texture, frame, type, hp, damage, specialDamage, specialCharge, hpx, hpy);
 
-        this.setScale(8);
+        this.setScale(4);
     }
 });
 
