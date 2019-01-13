@@ -438,6 +438,7 @@ var BossScene = new Phaser.Class({
         console.log("starting scene");
         this.scene.start("BattleScene", {pc_texture: "player", pc_type: "Thorvik", pc_attack: 15, pc_special: 50, pc_spCharge: 1, e_texture: "dragonblue", e_type: "Black Dragon", e_hp: 225, e_attack: 20, e_special:10});
     },
+
     update: function (time, delta)
     {
         this.Bplayer.body.setVelocity(0);
@@ -552,7 +553,7 @@ var LevelUIScene = new Phaser.Class({
             var ourGame = this.scene.get('WorldScene');
             var bossGame = this.scene.get('BossScene');
 
-            this.message = new Message(this,ourGame.events, 552, 600, 475, 151);
+            this.message = new Message(this, ourGame.events, 157, 250, 475, 151);
             this.add.existing(this.message);
 
 
@@ -586,7 +587,7 @@ var LevelUIScene = new Phaser.Class({
 
                     life.setText('Health: ' + globalCharHealth);
                 }else{
-                    
+
                     globalCharHealth = 100;
 
                     ourGame.events.emit("Message", "+5 Health");
@@ -656,15 +657,16 @@ var BattleScene = new Phaser.Class({
         {
 
             // change the background to green
-            this.cameras.main.setBackgroundColor("rgba(220, 220, 220, 0.5)");
+            let bg = this.add.sprite(0, 100, 'battleBackground');
+            bg.setOrigin(0,0);
 
             // player character - warrior
             //scene, x, y, texture, frame, type, hp, damage, specialDamage, specialCharge, hpx, hpy
             // var warrior = new PlayerCharacter(this, 95, 350, "player", 1, "Thorvik", 100, 35, 100, 1, 184, 445);
-            var hero = new PlayerCharacter(this, 95, 350, this.pc_texture, 1, this.pc_type, globalCharHealth, this.pc_attack, this.pc_special, this.pc_spCharge, 3, 160);
+            var hero = new PlayerCharacter(this, 145, 460, this.pc_texture, 1, this.pc_type, globalCharHealth, this.pc_attack, this.pc_special, this.pc_spCharge, 3, 160);
             this.add.existing(hero);
 
-            var enemy = new Enemy(this, 932, 350, this.e_texture, 2, this.e_type, this.e_hp, this.e_attack, this.e_special, 4, 932, 160);
+            var enemy = new Enemy(this, 932, 440, this.e_texture, 2, this.e_type, this.e_hp, this.e_attack, this.e_special, 4, 932, 160);
             this.add.existing(enemy);
 
             // array with character
@@ -950,7 +952,7 @@ var UIScene = new Phaser.Class({
         this.events.on("Enemy", this.onEnemy, this);
         this.events.on("Heal", this.onHeal, this);
 
-        this.message = new Message(this, this.battleScene.events, 453, 584, 890, 151);
+        this.message = new Message(this, this.battleScene.events, 107, 292, 888, 150);
         this.add.existing(this.message);
 
         this.battleScene.nextTurn();
@@ -1014,7 +1016,7 @@ var Message = new Phaser.Class({
         graphics.fillStyle(0x031f4c, 0.3);
         graphics.strokeRect(x, y, width, height);
         graphics.fillRect(x, y, (width-1), (height-1));
-        this.text = new Phaser.GameObjects.Text(scene, 200, 75, "", { color: "#ffffff", align: "center", fontSize: 24, wordWrap: { width: 889, useAdvancedWrap: true }});
+        this.text = new Phaser.GameObjects.Text(scene, (x+(width/2)), (y+(height/2)), "", { color: "#ffffff", align: "center", fontSize: 24, wordWrap: { width: width, useAdvancedWrap: true }});
         this.add(this.text);
         this.text.setOrigin(0.5);
         events.on("Message", this.showMessage, this);
