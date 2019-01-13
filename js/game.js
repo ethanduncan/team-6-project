@@ -94,7 +94,12 @@ var WorldScene = new Phaser.Class({
         this.bolt8 = this.physics.add.sprite (1104,1488, 'bolt', 5);
 
         //health
-        this.heart1 = this.physics.add.sprite (2224,90, 'heart', 5).setScale(0.03);
+        this.heart1 = this.physics.add.sprite (240,656, 'heart', 5).setScale(0.03);
+        this.heart2 = this.physics.add.sprite (240,752, 'heart', 5).setScale(0.03);
+        this.heart3 = this.physics.add.sprite (1584,560, 'heart', 5).setScale(0.03);
+        this.heart4 = this.physics.add.sprite (2512,912, 'heart', 5).setScale(0.03);
+        this.heart5 = this.physics.add.sprite (1328,2832, 'heart', 5).setScale(0.03);
+
 
         this.enemy1 = this.physics.add.sprite (2224,150, 'dragonblue', 5);
 
@@ -187,11 +192,48 @@ var WorldScene = new Phaser.Class({
             }
         }, null, this);
 
-        this.physics.add.overlap(this.player, this.enemy1, function() {
-            this.enemy1.body.enable = false;
-            this.events.emit('Message', 'You\'ve encountered an enemy!');
-            this.time.addEvent({ delay: 1000, callback: this.startBattle, callbackScope: this });
-            this.enemy1.disableBody(true,true);
+        this.physics.add.overlap(this.player, this.heart2, function() {
+            if(globalCharHealth<100){
+                this.heart2.body.enable = false;
+                this.events.emit('addHealth');
+                this.time.addEvent({ delay: 2000, callback: console.log("doneso") , callbackScope: this });
+                this.heart2.disableBody(true,true);
+            }else{
+                this.events.emit("Message", "Health Full");
+            }
+        }, null, this);
+
+        this.physics.add.overlap(this.player, this.heart3, function() {
+            if(globalCharHealth<100){
+                this.heart3.body.enable = false;
+                this.events.emit('addHealth');
+                this.time.addEvent({ delay: 2000, callback: console.log("doneso") , callbackScope: this });
+                this.heart3.disableBody(true,true);
+            }else{
+                this.events.emit("Message", "Health Full");
+            }
+        }, null, this);
+
+        this.physics.add.overlap(this.player, this.heart4, function() {
+            if(globalCharHealth<100){
+                this.heart4.body.enable = false;
+                this.events.emit('addHealth');
+                this.time.addEvent({ delay: 2000, callback: console.log("doneso") , callbackScope: this });
+                this.heart4.disableBody(true,true);
+            }else{
+                this.events.emit("Message", "Health Full");
+            }
+        }, null, this);
+
+        this.physics.add.overlap(this.player, this.heart5, function() {
+            if(globalCharHealth<100){
+                this.heart5.body.enable = false;
+                this.events.emit('addHealth');
+                this.time.addEvent({ delay: 2000, callback: console.log("doneso") , callbackScope: this });
+                this.heart5.disableBody(true,true);
+            }else{
+                this.events.emit("Message", "Health Full");
+            }
         }, null, this);
 
         this.physics.world.bounds.width = floor.widthInPixels;
@@ -588,42 +630,21 @@ var LevelUIScene = new Phaser.Class({
 
             //  Listen for events from it
             ourGame.events.on('addScore', function () {
-
                 this.score += 1;
-
                 info.setText('Levers Found: ' + this.score);
-
             }, this);
 
             ourGame.events.on('removeHealth', function () {
-
                 globalCharHealth -= 5;
-
                 console.log(1);
-
                 ourGame.events.emit("Message", "-5 Health");
-
                 life.setText('Health: ' + globalCharHealth);
-
             }, this);
 
             ourGame.events.on('addHealth', function () {
-                if(globalCharHealth<95){
-
-                    globalCharHealth += 5;
-
-                    ourGame.events.emit("Message", "+5 Health");
-
-                    life.setText('Health: ' + globalCharHealth);
-                }else{
-
                     globalCharHealth = 100;
-
-                    ourGame.events.emit("Message", "+5 Health");
-
+                    ourGame.events.emit("Message", "Health Restored");
                     life.setText('Health: ' + globalCharHealth);
-                }
-
             }, this);
 
             this.image = this.add.image(350,220, "logo").setScale(0.75).setVisible(false);
