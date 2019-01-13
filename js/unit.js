@@ -109,7 +109,7 @@ var unit = new Phaser.Class({
         }
     },
     heal: function(target) {
-        this.hp.increase(25, this.maxHp);
+        this.hp.increase(15, this.maxHp);
         this.scene.events.emit("Message", this.type + " heals 25 hp");
     },
     chargeSpecial: function() {

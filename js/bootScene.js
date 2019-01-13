@@ -1,5 +1,5 @@
 var bs = new Phaser.Class({
-    
+
     Extends: Phaser.Scene,
 
     initialize:
@@ -38,6 +38,8 @@ var bs = new Phaser.Class({
         this.load.image('infoImage', 'assets/map/Infoscroll.png');
         this.load.image('heart', 'assets/traps/heart.png');
         // this.load.image('dead', 'assets/map/Newgame.png');
+        //Battle
+        this.load.image('battleBackground', 'assets/wall_block.png');
 
         //music
         this.load.audio('theme', 'assets/music/bensound-epic.mp3');
