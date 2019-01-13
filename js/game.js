@@ -96,6 +96,8 @@ var WorldScene = new Phaser.Class({
         //health
         this.heart1 = this.physics.add.sprite (2224,90, 'heart', 5).setScale(0.03);
 
+        this.enemy1 = this.physics.add.sprite (2224,150, 'dragonblue', 5);
+
         this.physics.add.overlap(this.player, this.lever1, function() {
             console.log("Hello");
             this.levers = this.levers + 1;
@@ -185,6 +187,13 @@ var WorldScene = new Phaser.Class({
             }
         }, null, this);
 
+        this.physics.add.overlap(this.player, this.enemy1, function() {
+            this.enemy1.body.enable = false;
+            this.events.emit('Message', 'You\'ve encountered an enemy!');
+            this.time.addEvent({ delay: 1000, callback: this.startBattle, callbackScope: this });
+            this.enemy1.disableBody(true,true);
+        }, null, this);
+
         this.physics.world.bounds.width = floor.widthInPixels;
         this.physics.world.bounds.height = floor.heightInPixels;
         this.player.setCollideWorldBounds(true);
@@ -215,6 +224,11 @@ var WorldScene = new Phaser.Class({
 
         this.key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
+    },
+    startBattle: function() {
+        console.log("starting scene");
+        this.scene.sleep("WorldScene");
+        this.scene.run("BattleScene", {pc_texture: "player", pc_type: "Thorvik", pc_attack: 150, pc_special: 50, pc_spCharge: 1, e_texture: "dragonblue", e_type: "Black Dragon", e_hp: 225, e_attack: 20, e_special:10});
     },
     testFunct1: function () {
         console.log("asd");
@@ -369,8 +383,6 @@ var BossScene = new Phaser.Class({
         const B_BloodTiles = B_Blood.addTilesetImage("tileset");
         const B_BloodyLayer = B_Blood.createStaticLayer(0, B_BloodTiles, 0, 0);
 
-        this.boss = this.add.sprite(500, 200, 'dragonblue', 5);
-
         //Sprite Spawn (done above foreground layer for layering effect)
         this.anims.create({
             key: 'left',
@@ -398,6 +410,13 @@ var BossScene = new Phaser.Class({
             repeat: -1
         });
         this.Bplayer = this.physics.add.sprite(368,944,'player', 6);
+        this.boss = this.physics.add.sprite (500, 200, 'dragonblue', 5);
+
+        // this.physics.add.overlap(this.bPlayer, this.boss, function() {
+        // }, null, this);
+
+        this.physics.add.overlap(this.Bplayer, this.boss, this.startBattle, null, this);
+        this.time.addEvent({ delay: 10000, callback: this.startBattle, callbackScope: this });
 
         //final Layer Spawn
         const B_F_Decor = this.make.tilemap({ key: "forge_f_decor", tileWidth: 32, tileHeight: 32 });
@@ -422,17 +441,7 @@ var BossScene = new Phaser.Class({
         this.cameras.main.roundPixels = true;
         this.cameras.main.setZoom(1.5);
 
-        // this.physics.add.overlap(this.bPlayer, this.boss, function() {
-        // }, null, this);
-
-        this.physics.add.overlap(this.Bplayer, this.boss, this.startBattle, null, this);
-        this.time.addEvent({ delay: 10000, callback: this.startBattle, callbackScope: this });
-
-
         this.cursors = this.input.keyboard.createCursorKeys();
-
-        this.key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-
     },
     startBattle: function() {
         console.log("starting scene");
@@ -483,10 +492,6 @@ var BossScene = new Phaser.Class({
         {
             this.Bplayer.anims.stop();
         }
-        if(this.key.isDown){
-            this.events.emit('removeInfo');
-        }
-
     }
 });
 
@@ -527,6 +532,32 @@ var WinScene = new Phaser.Class({
         }
     });
 
+var InfoScene = new Phaser.Class({
+
+        Extends: Phaser.Scene,
+
+        initialize:
+
+        function InfoScene ()
+        {
+            Phaser.Scene.call(this, {key: "InfoScene"});
+        },
+
+        create: function ()
+        {
+            this.add.image(640, 320, "background");
+            this.key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+            var infoImage = this.add.image(554, 450, "infoImage").setScale(1);
+        },
+
+        update: function ()
+        {
+            if(this.key.isDown){
+                this.scene.start("WorldScene");
+            }
+        }
+})
+
 var LevelUIScene = new Phaser.Class({
 
         Extends: Phaser.Scene,
@@ -546,8 +577,6 @@ var LevelUIScene = new Phaser.Class({
 
             var info = this.add.text(875, 800, 'Levers Found: 0', { font: '24px Arial', fill: '#FFFFFF' });
             var life = this.add.text(50, 800, 'Health: ' + globalCharHealth , { font: '24px Arial', fill: '#FFFFFF' });
-
-            var infoImage = this.add.image(554, 450, "infoImage").setScale(1);
 
             //  Grab a reference to the Game Scene
             var ourGame = this.scene.get('WorldScene');
@@ -594,19 +623,6 @@ var LevelUIScene = new Phaser.Class({
 
                     life.setText('Health: ' + globalCharHealth);
                 }
-
-            }, this);
-
-
-            ourGame.events.on('removeInfo', function () {
-
-                infoImage.destroy();
-
-            }, this);
-
-            bossGame.events.on('removeInfo', function () {
-
-                infoImage.destroy();
 
             }, this);
 
@@ -678,7 +694,7 @@ var BattleScene = new Phaser.Class({
 
             // Run UI Scene at the same time
             this.scene.launch("UIScene");
-            this.scene.stop("LevelUIScene");
+            this.scene.sleep("LevelUIScene");
             this.index = -1;
         },
         nextTurn: function() {
@@ -702,9 +718,18 @@ var BattleScene = new Phaser.Class({
                         this.time.addEvent({ delay: 3000, callback: this.nextTurn, callbackScope: this });
                     }
                 } else {
-                    this.scene.remove("UIScene");
-                    this.scene.start("WinScene");
-                    //this.time.addEvent({ callback: this.nextTurn, callbackScope: this });
+                    if(this.units[this.index] instanceof PlayerCharacter) {
+                        this.scene.remove("UIScene");
+                        this.scene.remove("BattleScene");
+                        this.scene.remove("WorldScene");
+                        this.scene.remove("LevelUIScene");
+                        this.scene.start("DeathScene");
+                    } else {
+                        this.scene.remove("UIScene");
+                        this.scene.remove("BattleScene");
+                        this.scene.wake("WorldScene");
+                        this.scene.wake("LevelUIScene");
+                    }
                 }
             }
         },
@@ -1053,6 +1078,7 @@ var config = {
     },
     scene: [
         BootScene,
+        InfoScene,
         WorldScene,
         BossScene,
         BattleScene,
