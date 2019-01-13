@@ -102,7 +102,7 @@ var WorldScene = new Phaser.Class({
 
         this.enemy1 = this.physics.add.sprite (2224, 170, 'eyedrop', 5);
         //this.enemy2 = this.physics.add.sprite (880, 464, 'koboldmage', 5);
-        this.enemy3 = this.physics.add.sprite (304, 1040, 'koboldleader', 5);
+        //this.enemy3 = this.physics.add.sprite (304, 1040, 'koboldleader', 5);
         this.enemy5 = this.physics.add.sprite (240, 2576, 'eyedrop', 5);
 
         this.enemy4 = this.physics.add.sprite (2128, 2480, 'eyedrop', 5);
@@ -148,12 +148,12 @@ var WorldScene = new Phaser.Class({
         //    this.cameras.main.shake(150);
         //}, null, this);
 
-        this.physics.add.overlap(this.player, this.bolt3, function() {
-            this.bolt3.body.enable = false;
-            this.events.emit('removeHealth');
-            this.time.addEvent({ delay: 2000, callback: this.testFunct3 , callbackScope: this });
-            this.cameras.main.shake(150);
-        }, null, this);
+        //this.physics.add.overlap(this.player, this.bolt3, function() {
+        //    this.bolt3.body.enable = false;
+        //    this.events.emit('removeHealth');
+        //    this.time.addEvent({ delay: 2000, callback: this.testFunct3 , callbackScope: this });
+        //    this.cameras.main.shake(150);
+        //}, null, this);
 
         this.physics.add.overlap(this.player, this.bolt4, function() {
             this.bolt4.body.enable = false;
