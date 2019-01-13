@@ -29,7 +29,7 @@ var ms = new Phaser.Class({
     {
         if(this.menuNumber===0){
             //Revert after testing
-            this.scene.start("WorldScene");
+            this.scene.start("InfoScene");
             //this.scene.start("BossScene");
         }
     }
