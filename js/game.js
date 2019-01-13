@@ -224,17 +224,17 @@ var WorldScene = new Phaser.Class({
         }, null, this);
 
         this.physics.add.overlap(this.player, this.subboss1, function() {
-            this.enemy1.body.enable = false;
+            this.subboss1.body.enable = false;
             this.events.emit('Message', 'You\'ve encountered an enemy!');
             this.time.addEvent({ delay: 1000, callback: this.startSubBoss1, callbackScope: this });
-            this.enemy1.disableBody(true,true);
+            this.subboss1.disableBody(true,true);
         }, null, this);
 
         this.physics.add.overlap(this.player, this.subboss2, function() {
-            this.subboss1.body.enable = false;
+            this.subboss2.body.enable = false;
             this.events.emit('Message', 'You\'ve encountered an enemy!');
             this.time.addEvent({ delay: 1000, callback: this.startSubBoss2, callbackScope: this });
-            this.subboss1.disableBody(true,true);
+            this.subboss2.disableBody(true,true);
         }, null, this);
 
         this.physics.add.overlap(this.player, this.boss1, function() {
