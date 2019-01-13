@@ -43,8 +43,8 @@ var bs = new Phaser.Class({
         this.load.image("kobold","assets/Monsters/gnoll.png");
         this.load.image("koboldmage","assets/Monsters/gnoll_shaman.png");
         this.load.image("koboldleader","assets/Monsters/gnoll_sergeant.png");
-        this.load.image("bonedragon", "assets/Monsters/bone_dragon.png");
-        this.load.image("bigkobold","assets/Monsters/big_kobold.png");
+        this.load.image("bonedragon", "assets/Big\ Monsters/bone_dragon_big.png");
+        this.load.image("bigkobold","assets/Big\ Monsters/big_kobold_big.png");
 
         //music
         this.load.audio('theme', 'assets/music/bensound-epic.mp3');
